@@ -1,0 +1,43 @@
+/* ==========================================================================
+   Page-level styles that lived in inline <style> blocks / attributes of the
+   original static pages (about.html, careers.html, index.html).
+   ========================================================================== */
+
+/* index.html — "visit Portfolio" button (inline style + onmouseover) */
+.build_button.banner-portfolio-btn { background-color: white !important; color: black !important; }
+.build_button.banner-portfolio-btn:hover { background-color: black !important; color: white !important; }
+
+/* Logo height (inline `height: 106px !important`) */
+.header__area-menubar-left-logo img,
+.footer__one-widget img,
+.footer__four-widget img { height: 106px !important; }
+
+/* about.html */
+.client__item { background: #fff; padding: 25px 20px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); height: 100%; transition: all 0.3s ease; border-left: 4px solid #ff6b35; }
+.client__item:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+.client__item h6 { margin: 0; font-size: 14px; font-weight: 600; color: #333; line-height: 1.4; }
+.md-message__area { background: #f8f9fa; }
+.md-message__content { position: relative; padding: 40px; background: #fff; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+.md-message__quote { text-align: center; margin-bottom: 30px; }
+.md-message__quote i { font-size: 48px; color: #ff6b35; opacity: 0.3; }
+.md-message__content p { font-size: 16px; line-height: 1.8; margin-bottom: 20px; color: #666; text-align: justify; }
+.core-value__item { background: #fff; padding: 40px 30px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%; text-align: center; }
+.core-value__item:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+.core-value__icon { width: 80px; height: 80px; background: linear-gradient(135deg, #ff6b35, #ff8c42); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; transition: all 0.3s ease; }
+.core-value__icon i { font-size: 32px; color: #fff; }
+.core-value__item:hover .core-value__icon { transform: scale(1.1); }
+.core-value__item h4 { font-size: 20px; font-weight: 600; color: #333; margin-bottom: 15px; }
+.core-value__item p { font-size: 14px; line-height: 1.6; color: #666; margin: 0; }
+
+/* careers.html */
+.job__card { background: #fff; border-radius: 10px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); height: 100%; }
+.job__card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.job__type { background: #f8f9fa; padding: 5px 15px; border-radius: 20px; font-size: 14px; color: #666; }
+.job__requirements { list-style: none; padding: 0; margin: 15px 0; }
+.job__requirements li { padding: 5px 0; position: relative; padding-left: 20px; }
+.job__requirements li:before { content: "•"; color: #ff6b35; font-weight: bold; position: absolute; left: 0; }
+.benefit__item { background: #fff; padding: 40px 20px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); height: 100%; }
+.benefit__item i { font-size: 48px; color: #ff6b35; margin-bottom: 20px; }
+
+/* contact form server-side validation messages */
+.contact-field-error { display: block; color: #c0392b; margin-top: 6px; font-size: 13px; }
