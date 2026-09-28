@@ -9,6 +9,7 @@ import {
   servicesRepo,
   messagesRepo,
   settingsRepo,
+  activityRepo,
 } from '@/lib/repositories';
 import { SOCIAL_NETWORKS } from '@/lib/constants/site';
 import { requireAdmin } from '@/lib/auth/session';
@@ -47,7 +48,7 @@ async function sectionCounts(repo) {
 }
 
 export default async function DashboardPage() {
-  const [admin, trusted, stats, projects, portfolio, clients, jobs, services, messages, unread, settings] = await Promise.all([
+  const [admin, trusted, stats, projects, portfolio, clients, jobs, services, messages, unread, settings, activity] = await Promise.all([
     requireAdmin(),
     sectionCounts(trustedClientsRepo),
     sectionCounts(homeStatsRepo),
@@ -59,6 +60,7 @@ export default async function DashboardPage() {
     messagesRepo.listMessages(),
     messagesRepo.countUnread(),
     settingsRepo.getSettings(),
+    activityRepo.listActivity(6),
   ]);
 
   const socialCount = SOCIAL_NETWORKS.filter((network) => settings[network.key]).length;
@@ -66,6 +68,7 @@ export default async function DashboardPage() {
     { label: 'Telephone', icon: 'fa-phone', value: settings['contact.telephone'] },
     { label: 'Mobile', icon: 'fa-mobile', value: settings['contact.mobile'] || 'Hidden' },
     { label: 'Email', icon: 'fa-at', value: settings['contact.email'] },
+    { label: 'WhatsApp button', icon: 'fa-comment', value: settings['contact.whatsapp'] || 'Off' },
     { label: 'Address', icon: 'fa-location-dot', value: settings['contact.address'].split('\n').join(', ') },
     { label: 'Social links', icon: 'fa-share-nodes', value: `${socialCount} of ${SOCIAL_NETWORKS.length} shown` },
   ];
@@ -85,7 +88,7 @@ export default async function DashboardPage() {
     { href: '/bys-panel-d10224a364/portfolio/new', label: 'Add a portfolio project', icon: 'fa-building' },
     { href: '/bys-panel-d10224a364/jobs/new', label: 'Post a job opening', icon: 'fa-briefcase' },
     { href: '/bys-panel-d10224a364/contact', label: 'Update contact details', icon: 'fa-address-book' },
-    { href: '/bys-panel-d10224a364/settings', label: 'Edit section headings', icon: 'fa-heading' },
+    { href: '/bys-panel-d10224a364/content/home', label: 'Edit home page text', icon: 'fa-house' },
   ];
 
   const sitePages = [
@@ -158,42 +161,70 @@ export default async function DashboardPage() {
       </div>
 
       <div className="admin-dashboard__panels">
-        <section className="admin-card admin-panel">
-          <header className="admin-panel__head">
-            <div>
-              <h2>Recent messages</h2>
-              <p>Latest submissions from the Contact page.</p>
-            </div>
-            <Link href="/bys-panel-d10224a364/messages" className="btn btn-light btn-sm">
-              View all<i className="fa-regular fa-arrow-right ms-2"></i>
-            </Link>
-          </header>
-          {recent.length === 0 ? (
-            <div className="admin-empty admin-empty--compact">
-              <span className="admin-empty__icon">
-                <i className="fa-regular fa-inbox"></i>
-              </span>
-              <p>No messages yet.</p>
-            </div>
-          ) : (
-            <ul className="admin-inbox">
-              {recent.map((message) => (
-                <li key={message.id}>
-                  <Link href={`/bys-panel-d10224a364/messages/${message.id}`} className={`admin-inbox__item${message.isRead ? '' : ' is-unread'}`}>
-                    <span className="admin-avatar">{initials(message.name)}</span>
-                    <span className="admin-inbox__body">
-                      <span className="admin-inbox__top">
-                        <strong>{message.name}</strong>
-                        <time>{timeAgo(message.createdAt)}</time>
+        <div className="admin-dashboard__side">
+          <section className="admin-card admin-panel">
+            <header className="admin-panel__head">
+              <div>
+                <h2>Recent messages</h2>
+                <p>Latest submissions from the Contact page.</p>
+              </div>
+              <Link href="/bys-panel-d10224a364/messages" className="btn btn-light btn-sm">
+                View all<i className="fa-regular fa-arrow-right ms-2"></i>
+              </Link>
+            </header>
+            {recent.length === 0 ? (
+              <div className="admin-empty admin-empty--compact">
+                <span className="admin-empty__icon">
+                  <i className="fa-regular fa-inbox"></i>
+                </span>
+                <p>No messages yet.</p>
+              </div>
+            ) : (
+              <ul className="admin-inbox">
+                {recent.map((message) => (
+                  <li key={message.id}>
+                    <Link href={`/bys-panel-d10224a364/messages/${message.id}`} className={`admin-inbox__item${message.isRead ? '' : ' is-unread'}`}>
+                      <span className="admin-avatar">{initials(message.name)}</span>
+                      <span className="admin-inbox__body">
+                        <span className="admin-inbox__top">
+                          <strong>{message.name}</strong>
+                          <time>{timeAgo(message.createdAt)}</time>
+                        </span>
+                        <span className="admin-inbox__text">{message.message || message.email}</span>
                       </span>
-                      <span className="admin-inbox__text">{message.message || message.email}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
+          {activity?.length > 0 && (
+            <section className="admin-card admin-panel admin-dashboard__activity">
+              <header className="admin-panel__head">
+                <div>
+                  <h2>Recent changes</h2>
+                  <p>Latest edits in this admin panel.</p>
+                </div>
+                <Link href="/bys-panel-d10224a364/activity" className="btn btn-light btn-sm">
+                  View all<i className="fa-regular fa-arrow-right ms-2"></i>
+                </Link>
+              </header>
+              <ul className="admin-activity-list">
+                {activity.map((entry) => (
+                  <li key={entry.id}>
+                    <span className="admin-avatar">{initials(entry.adminName)}</span>
+                    <span className="min-w-0">
+                      <strong>{entry.adminName}</strong> {entry.action} <strong>{entry.section}</strong>
+                      {entry.item && <span className="text-muted"> · {entry.item}</span>}
+                      <time>{timeAgo(entry.createdAt)}</time>
                     </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                  </li>
+                ))}
+              </ul>
+            </section>
           )}
-        </section>
+        </div>
 
         <div className="admin-dashboard__side">
           <section className="admin-card admin-panel">

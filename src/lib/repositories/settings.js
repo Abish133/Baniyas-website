@@ -1,14 +1,11 @@
 import 'server-only';
 import { query } from '@/lib/db';
+import { CONTENT_DEFAULTS, OPTIONAL_CONTENT_KEYS } from '@/lib/content-config';
 
 // Defaults keep the site rendering even if a key was never seeded.
+// Page text/images come from content-config.js; contact details are below.
 export const SETTING_DEFAULTS = {
-  'home.trusted_clients_title': 'Our Trusted Clients',
-  'home.services_subtitle': 'Our Services',
-  'home.services_title': 'Our end to end offerings',
-  'home.services_image': '/assets/img/page/services.jpg',
-  'about.clients_subtitle': 'Our Partners',
-  'about.clients_title': 'Our Clients',
+  ...CONTENT_DEFAULTS,
   'contact.telephone': '+971 7 226 3131',
   'contact.mobile': '+971 55 2070846',
   'contact.email': 'baniyasbuilders@gmail.com',
@@ -21,10 +18,19 @@ export const SETTING_DEFAULTS = {
   'social.x': 'https://x.com/',
   'social.behance': 'https://behance.net/',
   'social.linkedin': 'https://linkedin.com/',
+  'contact.whatsapp': '',
 };
 
 // Keys the admin may clear on purpose (an empty value hides the item on the site).
-const CLEARABLE_KEYS = new Set(['contact.mobile', 'social.facebook', 'social.x', 'social.behance', 'social.linkedin']);
+const CLEARABLE_KEYS = new Set([
+  'contact.mobile',
+  'contact.whatsapp',
+  'social.facebook',
+  'social.x',
+  'social.behance',
+  'social.linkedin',
+  ...OPTIONAL_CONTENT_KEYS,
+]);
 
 export async function getSettings() {
   const rows = await query('SELECT setting_key, setting_value FROM site_settings');

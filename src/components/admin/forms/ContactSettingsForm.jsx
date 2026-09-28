@@ -19,7 +19,15 @@ export default function ContactSettingsForm({ settings }) {
                 <TextField name="contact.mobile" label="Mobile number" maxLength={25} placeholder="+971 55 2070846" help="Leave empty to hide it." />
               </div>
             </div>
-            <TextField name="contact.email" label="Email address" type="email" required maxLength={191} className="mb-0" />
+            <TextField name="contact.email" label="Email address" type="email" required maxLength={191} />
+            <TextField
+              name="contact.whatsapp"
+              label="WhatsApp number"
+              maxLength={25}
+              placeholder="+971 55 2070846"
+              help="Shows a floating WhatsApp chat button on every page. Include the country code. Leave empty to hide the button."
+              className="mb-0"
+            />
           </FormSection>
           <FormSection title="Address & map" description="The address links to Google Maps; the embed is the map on the Contact page." icon="fa-regular fa-location-dot" className="mt-4">
             <TextAreaField name="contact.address" label="Address" required minLength={5} maxLength={300} rows={3} help="Each line is shown on its own line (max 5 lines)." />

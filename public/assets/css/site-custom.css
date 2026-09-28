@@ -41,3 +41,12 @@
 
 /* contact form server-side validation messages */
 .contact-field-error { display: block; color: #c0392b; margin-top: 6px; font-size: 13px; }
+
+/* floating WhatsApp button (above the scroll-to-top button) */
+.whatsapp-float { position: fixed; right: 20px; bottom: 84px; z-index: 9999; width: 50px; height: 50px; border-radius: 50%; background: #25d366; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 6px 16px rgba(0,0,0,0.2); transition: transform .2s ease; }
+.whatsapp-float:hover { color: #fff; transform: scale(1.08); }
+
+/* legal pages (Terms / Privacy) */
+.legal__content { max-width: 860px; margin: 0 auto; }
+.legal__content h3 { margin: 32px 0 14px; }
+.legal__content p { white-space: pre-line; }

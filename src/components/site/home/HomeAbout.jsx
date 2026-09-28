@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Counter from '@/components/site/effects/Counter';
+import { getSiteSettings } from '@/lib/content';
 
 // Column alignment classes from the original 3-column counter row.
 const COUNTER_CLASSES = [
@@ -9,22 +10,22 @@ const COUNTER_CLASSES = [
 ];
 const COUNTER_DELAYS = ['.4s', '.7s', '1s'];
 
-export default function HomeAbout({ stats }) {
+export default async function HomeAbout({ stats }) {
+  const s = await getSiteSettings();
   return (
     <div className="about__four section-padding">
       <div className="container">
         <div className="row al-center">
           <div className="col-lg-9">
             <div className="about__four-title">
-              <span className="subtitle wow fadeInLeft" data-wow-delay=".4s">About Our Company</span>
-              <h2 className="title_split_anim mb-20">Welcome to Bani Yas Builders</h2>
-              <p className="wow fadeInUp" data-wow-delay=".4s">
-                Bani Yas Building Contg LLC is a multidisciplinary Civil Engineering Construction company with proven
-                capabilities over a wide range of different technical fields in the Civil Engineering Industry since 2008.
+              <span className="subtitle wow fadeInLeft" data-wow-delay=".4s">{s['home.about_subtitle']}</span>
+              <h2 className="title_split_anim mb-20">{s['home.about_title']}</h2>
+              <p className="wow fadeInUp" data-wow-delay=".4s" style={{ whiteSpace: 'pre-line' }}>
+                {s['home.about_text']}
               </p>
               <div className="item_bounce">
                 <Link className="build_button mt-25" href="/about">
-                  Our Story<i className="flaticon-right-up"></i>
+                  {s['home.about_button']}<i className="flaticon-right-up"></i>
                 </Link>
               </div>
             </div>
@@ -52,7 +53,7 @@ export default function HomeAbout({ stats }) {
           </div>
           <div className="col-lg-4 lg-mt-25">
             <div className="about__four-right t-right wow img_right_animation">
-              <img src="/assets/img/about/about-6.png" alt="image" />
+              <img src={s['home.about_image']} alt={s['home.about_title']} />
             </div>
           </div>
         </div>

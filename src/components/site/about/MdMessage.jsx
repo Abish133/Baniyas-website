@@ -1,19 +1,18 @@
-const PARAGRAPHS = [
-  ['.6s', 'We believe that hard work combined with smart work is the key to success. Through these years our company has come through a lot of ups and downs and has carved a niche out for itself in the construction and engineering landscape and emerged as one of the top construction companies in Ras Al Khaimah.'],
-  ['.8s', 'Bani Yas Building Contg. LLC has earned a reputation among its clients for its reliability and integrity towards the work. Bani Yas Building Contg. LLC has the capability and accountability to timely deliver the projects to clients with the highest standard of quality, also exceeding their expectations. We also upgrade ourselves with the latest tools and machinery to complete the projects efficiently and effectively.'],
-  ['1s', 'We have achieved this success because of the dedication and hard work of our employees and workers towards their work. They have contributed more for the growth and development of the company.'],
-  ['1.2s', 'We would like to thank our valued clients for their unending support and employees for their cooperation and hard work in making the Bani Yas Building Contg. LLC success possible. Looking forward, the aim of Bani Yas Building Contg. LLC is to continue providing quality construction with innovative ideas, adopt better management and construction techniques.'],
-];
+import { getSiteSettings } from '@/lib/content';
+import { toParagraphs } from '@/lib/content-config';
 
-export default function MdMessage() {
+const DELAYS = ['.6s', '.8s', '1s', '1.2s'];
+
+export default async function MdMessage() {
+  const s = await getSiteSettings();
   return (
     <div className="md-message__area section-padding">
       <div className="container">
         <div className="row mb-60">
           <div className="col-xl-12">
             <div className="section-title t-center">
-              <span className="subtitle wow fadeInLeft" data-wow-delay=".4s">Leadership</span>
-              <h2 className="title_split_anim">Message from Managing Director</h2>
+              <span className="subtitle wow fadeInLeft" data-wow-delay=".4s">{s['about.md_subtitle']}</span>
+              <h2 className="title_split_anim">{s['about.md_title']}</h2>
             </div>
           </div>
         </div>
@@ -33,7 +32,7 @@ export default function MdMessage() {
               }}
             >
               <img
-                src="/assets/img/about/MD.jpeg"
+                src={s['about.md_image']}
                 alt="Managing Director"
                 className="img-fluid"
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -47,8 +46,8 @@ export default function MdMessage() {
               <div className="md-message__quote wow fadeInUp" data-wow-delay=".4s">
                 <i className="fas fa-quote-left"></i>
               </div>
-              {PARAGRAPHS.map(([delay, text]) => (
-                <p className="wow fadeInUp" data-wow-delay={delay} key={delay}>
+              {toParagraphs(s['about.md_text']).map((text, index) => (
+                <p className="wow fadeInUp" data-wow-delay={DELAYS[index] || '1.2s'} key={index}>
                   {text}
                 </p>
               ))}

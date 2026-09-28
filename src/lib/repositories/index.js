@@ -42,3 +42,4 @@ export * as servicesRepo from './services';
 export * as settingsRepo from './settings';
 export * as messagesRepo from './messages';
 export * as adminUsersRepo from './adminUsers';
+export * as activityRepo from './activity';

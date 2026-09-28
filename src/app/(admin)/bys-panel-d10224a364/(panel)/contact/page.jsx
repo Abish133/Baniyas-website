@@ -8,7 +8,7 @@ export default async function ContactSettingsPage() {
   const settings = await settingsRepo.getSettings();
   return (
     <>
-      <PageHeader title="Contact Details" description="Phone numbers, email, address, map and social links used across the website." />
+      <PageHeader siteHref="/contact" title="Contact Details" description="Phone numbers, email, address, map and social links used across the website." />
       <ContactSettingsForm settings={settings} />
     </>
   );

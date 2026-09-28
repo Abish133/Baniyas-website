@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { messagesRepo } from '@/lib/repositories';
-import { deleteMessage } from '@/actions/admin/messages';
+import { deleteMessage, markAllMessagesRead } from '@/actions/admin/messages';
 import PageHeader from '@/components/admin/PageHeader';
 import StatusAlert from '@/components/admin/StatusAlert';
 import AdminTable from '@/components/admin/AdminTable';
@@ -12,15 +12,51 @@ export const metadata = { title: 'Messages' };
 const formatDate = (date) =>
   new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Dubai' }).format(new Date(date));
 
-export default async function MessagesPage() {
-  const items = await messagesRepo.listMessages();
+export default async function MessagesPage({ searchParams }) {
+  const params = await searchParams;
+  const q = typeof params.q === 'string' ? params.q.trim().slice(0, 100) : '';
+  const filter = params.filter === 'unread' ? 'unread' : 'all';
+  const [items, unread] = await Promise.all([
+    messagesRepo.listMessages({ search: q || undefined, unreadOnly: filter === 'unread' }),
+    messagesRepo.countUnread(),
+  ]);
+  const exportQuery = new URLSearchParams({ ...(q && { q }), ...(filter === 'unread' && { filter }) }).toString();
+  const filtered = Boolean(q) || filter === 'unread';
+
   return (
     <>
-      <PageHeader title="Messages" description="Submissions from the Contact page form." />
+      <PageHeader title="Messages" description="Submissions from the Contact page form.">
+        {unread > 0 && (
+          <form action={markAllMessagesRead}>
+            <button className="btn btn-light" type="submit">
+              <i className="fa-regular fa-envelope-open me-2"></i>Mark all as read
+            </button>
+          </form>
+        )}
+        <a className="btn btn-light" href={`/bys-panel-d10224a364/messages/export${exportQuery ? `?${exportQuery}` : ''}`}>
+          <i className="fa-regular fa-file-arrow-down me-2"></i>Download CSV
+        </a>
+      </PageHeader>
       <StatusAlert />
+      <form className="admin-filter" role="search">
+        <div className="admin-filter__search">
+          <i className="fa-regular fa-magnifying-glass"></i>
+          <input type="search" name="q" defaultValue={q} className="form-control" placeholder="Search name, email, phone or message…" aria-label="Search messages" />
+        </div>
+        <select name="filter" defaultValue={filter} className="form-select" aria-label="Show">
+          <option value="all">All messages</option>
+          <option value="unread">Unread only ({unread})</option>
+        </select>
+        <button type="submit" className="btn btn-primary">Apply</button>
+        {filtered && (
+          <Link href="/bys-panel-d10224a364/messages" className="btn btn-light">
+            Clear
+          </Link>
+        )}
+      </form>
       <AdminTable
         rows={items}
-        emptyText="No messages yet. Submissions from the Contact page will appear here."
+        emptyText={filtered ? 'No messages match your search.' : 'No messages yet. Submissions from the Contact page will appear here.'}
         itemLabel="messages"
         columns={[
           {

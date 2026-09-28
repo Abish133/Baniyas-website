@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const MESSAGE_STYLES = {
   success: { backgroundColor: '#d4edda', color: '#155724', border: '1px solid #c3e6cb' },
@@ -11,6 +11,11 @@ export default function ContactForm() {
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState(null);
   const [errors, setErrors] = useState({});
+  // When the form was shown; the server rejects instant (bot) submissions.
+  const startedAt = useRef(0);
+  useEffect(() => {
+    startedAt.current = Date.now();
+  }, []);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -22,12 +27,13 @@ export default function ContactForm() {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        body: JSON.stringify({ ...Object.fromEntries(new FormData(form)), startedAt: startedAt.current }),
       });
       const result = await response.json();
       if (result.success) {
         setMessage({ type: 'success', text: 'Thank you! Your message has been sent successfully. We will get back to you within 24 hours.' });
         form.reset();
+        startedAt.current = Date.now();
         setTimeout(() => setMessage(null), 5000);
       } else {
         setErrors(result.errors || {});
@@ -46,6 +52,13 @@ export default function ContactForm() {
     <div className="contact__area-form">
       <h4>Send Message</h4>
       <form id="contact-form" method="POST" onSubmit={handleSubmit} noValidate={false}>
+        {/* Spam trap: hidden from people, bots tend to fill it in. */}
+        <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: '1px', height: '1px', overflow: 'hidden' }}>
+          <label>
+            Website
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+          </label>
+        </div>
         <div className="row">
           <div className="col-md-6 mb-25">
             <div className="contact__form-area-item">

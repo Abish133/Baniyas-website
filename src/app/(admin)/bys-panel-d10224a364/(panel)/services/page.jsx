@@ -12,6 +12,7 @@ export default async function ServicesAdminPage() {
   return (
     <>
       <PageHeader
+        siteHref="/services"
         title="Services"
         description="Cards in the home page slider and the full details on the Services page."
         actionHref="/bys-panel-d10224a364/services/new"

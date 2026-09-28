@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 
-/** Renders the admin-edited address, one <br /> between lines. */
-export default function AddressLines({ lines }) {
+/** Renders lines of text with a <br /> between them (address, badge text). */
+export default function LineBreaks({ lines }) {
   return lines.map((line, index) => (
     <Fragment key={index}>
       {index > 0 && <br />}

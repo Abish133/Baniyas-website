@@ -13,6 +13,7 @@ export default async function HomeProjectsPage() {
   return (
     <>
       <PageHeader
+        siteHref="/"
         title="Project Showcase"
         description={`Hover-to-expand project images on the home page (max ${LIMITS.homeProjectsActive} visible).`}
         actionHref="/bys-panel-d10224a364/home-projects/new"

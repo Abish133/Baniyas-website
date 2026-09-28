@@ -2,9 +2,11 @@ import Link from 'next/link';
 import BrandLogo from './BrandLogo';
 import Copyright from './Copyright';
 import { FooterAddress, FooterQuickLinks, FooterSupport } from './FooterLinks';
+import { getSiteSettings } from '@/lib/content';
 
 /** Footer used by all inner pages (footer__one + copyright). */
-export default function Footer() {
+export default async function Footer() {
+  const s = await getSiteSettings();
   return (
     <>
       <div className="footer__one">
@@ -15,7 +17,7 @@ export default function Footer() {
                 <div className="row al-center">
                   <div className="col-lg-8 lg-t-center lg-mb-25">
                     <div className="footer__one-cta-title title_split_anim">
-                      <h2>Your Dream Project Awaits — Get Started Today!</h2>
+                      <h2>{s['layout.footer_cta']}</h2>
                     </div>
                   </div>
                   <div className="col-lg-4">
@@ -32,7 +34,7 @@ export default function Footer() {
                   <div className="col-lg-4 col-sm-6">
                     <div className="footer__one-widget mr-40">
                       <BrandLogo className="" color="#ffffff" />
-                      <h5>We have Solutions for every construction</h5>
+                      <h5>{s['layout.footer_tagline']}</h5>
                     </div>
                   </div>
                   <div className="col-lg-3 col-sm-6 sm-mt-30">

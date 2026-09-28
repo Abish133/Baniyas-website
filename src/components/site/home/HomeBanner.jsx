@@ -1,7 +1,10 @@
 import Link from 'next/link';
+import { getSiteSettings } from '@/lib/content';
 
 /** Video banner + "Our Trusted Clients" logo marquee. */
-export default function HomeBanner({ clientsTitle, trustedClients }) {
+export default async function HomeBanner({ clientsTitle, trustedClients }) {
+  const s = await getSiteSettings();
+  const video = s['home.banner_video'];
   const logoList = (
     <ul style={{ height: '100px', width: '100%' }}>
       {trustedClients.map((client) => (
@@ -15,27 +18,27 @@ export default function HomeBanner({ clientsTitle, trustedClients }) {
   return (
     <div className="banner__four">
       <div className="bg-video">
-        <video autoPlay muted loop playsInline id="myVideo">
-          <source src="/assets/img/banner/banner.mp4" type="video/mp4" />
+        <video autoPlay muted loop playsInline id="myVideo" key={video}>
+          <source src={video} type={video.endsWith('.webm') ? 'video/webm' : 'video/mp4'} />
         </video>
       </div>
       <div className="container">
         <div className="row">
           <div className="col-xl-12">
             <div className="banner__four-content">
-              <span className="subtitle wow fadeInLeft" data-wow-delay=".4s">BANI YAS BUILDERS</span>
+              <span className="subtitle wow fadeInLeft" data-wow-delay=".4s">{s['home.banner_subtitle']}</span>
               <div className="title_split_anim">
-                <h1>Shaping Futures</h1>
-                <h2>Build to Last</h2>
+                <h1>{s['home.banner_title']}</h1>
+                <h2>{s['home.banner_title2']}</h2>
               </div>
               <div className="item_bounce" style={{ display: 'inline-block', marginRight: '20px' }}>
                 <Link className="build_button" href="/contact">
-                  Start Today<i className="flaticon-right-up"></i>
+                  {s['home.banner_button1']}<i className="flaticon-right-up"></i>
                 </Link>
               </div>{' '}
               <div className="item_bounce" style={{ display: 'inline-block' }}>
                 <Link className="build_button banner-portfolio-btn" href="/portfolio">
-                  visit Portfolio<i className="flaticon-right-up"></i>
+                  {s['home.banner_button2']}<i className="flaticon-right-up"></i>
                 </Link>
               </div>
             </div>

@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { requireAdmin } from '@/lib/auth/session';
 import { fieldErrors } from '@/lib/validation/fields';
 import { inspectImageFields, saveImage, deleteImage } from '@/lib/uploads';
+import { logActivity } from './activity';
 
 /** Reads plain (non-file) form fields into an object. */
 export function formValues(formData, names) {
@@ -37,6 +38,7 @@ export function refreshSite() {
  *   images: [{ field, rules, folder, required }],   // `required` applies when creating
  *   activeLimit: { max, label },                     // optional cap on active rows
  *   listPath: '/bys-panel-d10224a364/...',
+ *   label: 'Job Openings', nameField: 'title',        // for the activity log
  * }
  */
 export async function saveEntity(config, formData) {
@@ -77,6 +79,7 @@ export async function saveEntity(config, formData) {
     await config.repo.create(data);
   }
 
+  await logActivity(existing ? 'updated' : 'created', config.label, data[config.nameField]);
   refreshSite();
   redirect(`${config.listPath}?status=${existing ? 'updated' : 'created'}`);
 }
@@ -88,6 +91,7 @@ export async function deleteEntity(config, formData) {
   if (existing) {
     await config.repo.remove(id);
     for (const spec of config.images || []) await deleteImage(existing[spec.field]);
+    await logActivity('deleted', config.label, existing[config.nameField]);
     refreshSite();
   }
   redirect(`${config.listPath}?status=deleted`);
@@ -105,6 +109,7 @@ export async function toggleEntity(config, formData) {
     if (activeCount >= config.activeLimit.max) redirect(`${config.listPath}?status=limit`);
   }
   await config.repo.update(id, { isActive: activate });
+  await logActivity(activate ? 'shown' : 'hidden', config.label, existing[config.nameField]);
   refreshSite();
   redirect(`${config.listPath}?status=${activate ? 'activated' : 'deactivated'}`);
 }

@@ -1,7 +1,8 @@
 'use client';
 
-import { createContext, useActionState, useContext, useState } from 'react';
+import { createContext, useActionState, useCallback, useContext, useState } from 'react';
 import Link from 'next/link';
+import Toast from '@/components/admin/Toast';
 
 const FormContext = createContext({ errors: {}, values: {} });
 
@@ -11,7 +12,8 @@ export function useFormField(name) {
 }
 
 /**
- * Wraps a Server Action form: shows the server message, feeds field errors and the
+ * Wraps a Server Action form: shows the result (a toast on success, an alert above the
+ * fields on errors), feeds field errors and the
  * submitted values back into the fields (so nothing typed is lost on a validation error).
  * `stickyActions` pins the save bar to the bottom of the screen on long forms.
  */
@@ -27,18 +29,25 @@ export default function AdminForm({ action, initialValues = {}, recordId, submit
     setDirty(false);
   }
 
+  // Save that closed its toast (so it isn't shown again on re-render).
+  const [dismissedNonce, setDismissedNonce] = useState(0);
+  const closeToast = useCallback(() => setDismissedNonce(state.nonce), [state.nonce]);
+
   const values = state.values ? { ...initialValues, ...state.values } : initialValues;
   const errorCount = Object.keys(state.errors || {}).length;
 
   return (
     <FormContext value={{ errors: state.errors || {}, values }}>
       <form action={formAction} className="admin-form" onChange={() => setDirty(true)}>
-        {state.message && (
-          <div className={`admin-alert ${state.ok ? 'admin-alert--success' : 'admin-alert--danger'}`} role="alert">
-            <i className={`fa-solid ${state.ok ? 'fa-circle-check' : 'fa-triangle-exclamation'}`}></i>
+        {state.ok && state.message && state.nonce !== dismissedNonce && (
+          <Toast key={state.nonce} tone="success" title="Changes saved" text={state.message} onClose={closeToast} />
+        )}
+        {state.ok === false && state.message && (
+          <div className="admin-alert admin-alert--danger" role="alert">
+            <i className="fa-solid fa-triangle-exclamation"></i>
             <div>
               {state.message}
-              {!state.ok && errorCount > 0 && (
+              {errorCount > 0 && (
                 <span className="ms-1">
                   ({errorCount} field{errorCount > 1 ? 's' : ''} need{errorCount > 1 ? '' : 's'} attention)
                 </span>

@@ -20,7 +20,7 @@ export default function HomeServices({ subtitle, title, image, services }) {
           </div>
           <div className="col-xl-7 col-lg-6">
             <div className="services__four-image wow img_top_animation">
-              <img src={image} alt="image" />
+              <img src={image} alt={title} />
             </div>
           </div>
         </div>

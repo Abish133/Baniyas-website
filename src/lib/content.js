@@ -37,11 +37,16 @@ export const getJobOpenings = cache(() => jobsRepo.listActive());
 const phoneHref = (number) => `tel:${number.replace(/[^+\d]/g, '')}`;
 
 /** Company contact details shown in the footer, sidebar drawer and contact page. */
+/** All site settings (page text, images, contact details), with defaults. */
+export const getSiteSettings = cache(() => settingsRepo.getSettings());
+
 export const getSiteContact = cache(async () => {
-  const settings = await settingsRepo.getSettings();
+  const settings = await getSiteSettings();
   const mobile = settings['contact.mobile'];
   const email = settings['contact.email'];
+  const whatsapp = settings['contact.whatsapp'];
   return {
+    whatsapp: whatsapp ? { label: whatsapp, href: `https://wa.me/${whatsapp.replace(/\D/g, '')}` } : null,
     telephone: { label: settings['contact.telephone'], href: phoneHref(settings['contact.telephone']) },
     mobile: mobile ? { label: mobile, href: phoneHref(mobile) } : null,
     email: { label: email, href: `mailto:${email}` },

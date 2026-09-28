@@ -20,8 +20,22 @@ export async function createMessage({ name, email, phone, message, ipAddress }) 
   return result.insertId;
 }
 
-export async function listMessages() {
-  return (await query('SELECT * FROM contact_messages ORDER BY created_at DESC, id DESC')).map(toEntity);
+/** Newest first. `search` matches name, email, phone or message text; `unreadOnly` filters. */
+export async function listMessages({ search, unreadOnly } = {}) {
+  const where = [];
+  const params = [];
+  if (unreadOnly) where.push('is_read = 0');
+  if (search) {
+    const like = `%${search.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
+    where.push('(name LIKE ? OR email LIKE ? OR phone LIKE ? OR message LIKE ?)');
+    params.push(like, like, like, like);
+  }
+  const sql = `SELECT * FROM contact_messages ${where.length ? `WHERE ${where.join(' AND ')}` : ''} ORDER BY created_at DESC, id DESC`;
+  return (await query(sql, params)).map(toEntity);
+}
+
+export async function markAllRead() {
+  await query('UPDATE contact_messages SET is_read = 1 WHERE is_read = 0');
 }
 
 export async function findMessage(id) {

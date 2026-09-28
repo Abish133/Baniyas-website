@@ -1,15 +1,6 @@
-import { settingsRepo } from '@/lib/repositories';
-import PageHeader from '@/components/admin/PageHeader';
-import SettingsForm from '@/components/admin/forms/SettingsForm';
+import { redirect } from 'next/navigation';
 
-export const metadata = { title: 'Section Headings' };
-
-export default async function SettingsPage() {
-  const settings = await settingsRepo.getSettings();
-  return (
-    <>
-      <PageHeader title="Section Headings" description="Headings and the image of the dynamic sections." />
-      <SettingsForm settings={settings} />
-    </>
-  );
+// "Section Headings" moved into the Page content screens.
+export default function SettingsPage() {
+  redirect('/bys-panel-d10224a364/content/home');
 }

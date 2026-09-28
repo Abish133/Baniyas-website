@@ -1,9 +1,10 @@
+import { pageMetadata } from '@/lib/seo';
 import { getServicesPageContent } from '@/lib/content';
 import Breadcrumb from '@/components/site/common/Breadcrumb';
 import ServicesExplorer from '@/components/site/services/ServicesExplorer';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Services' };
+export const generateMetadata = () => pageMetadata('services');
 
 export default async function ServicesPage({ searchParams }) {
   const [{ service }, services] = await Promise.all([searchParams, getServicesPageContent()]);

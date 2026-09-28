@@ -13,6 +13,7 @@ export default async function TrustedClientsPage() {
   return (
     <>
       <PageHeader
+        siteHref="/"
         title="Trusted Clients"
         description={`Logos in the "Our Trusted Clients" strip on the home page banner (max ${LIMITS.trustedClientsActive} visible).`}
         actionHref="/bys-panel-d10224a364/trusted-clients/new"

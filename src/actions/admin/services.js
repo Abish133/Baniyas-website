@@ -8,6 +8,7 @@ import { fieldErrors } from '@/lib/validation/fields';
 import { IMAGE_RULES } from '@/lib/validation/image-rules';
 import { inspectImageFields, saveImage, deleteImage } from '@/lib/uploads';
 import { formValues, parseId, failure, refreshSite } from '@/lib/admin/crud';
+import { logActivity } from '@/lib/admin/activity';
 
 const LIST_PATH = '/bys-panel-d10224a364/services';
 const FIELDS = [
@@ -75,6 +76,7 @@ export async function saveService(_prevState, formData) {
   } else {
     await servicesRepo.create(data);
   }
+  await logActivity(existing ? 'updated' : 'created', 'Services', data.title);
   refreshSite();
   redirect(`${LIST_PATH}?status=${existing ? 'updated' : 'created'}`);
 }
@@ -86,6 +88,7 @@ export async function deleteService(formData) {
   if (existing) {
     await servicesRepo.remove(id);
     for (const { field } of IMAGE_FIELDS) await deleteImage(existing[field]);
+    await logActivity('deleted', 'Services', existing.title);
     refreshSite();
   }
   redirect(`${LIST_PATH}?status=deleted`);
@@ -100,6 +103,7 @@ export async function toggleService(formData) {
     redirect(`${LIST_PATH}?status=incomplete`);
   }
   await servicesRepo.updateFlags(id, { isActive: !existing.isActive });
+  await logActivity(existing.isActive ? 'hidden' : 'shown', 'Services', existing.title);
   refreshSite();
   redirect(`${LIST_PATH}?status=${existing.isActive ? 'deactivated' : 'activated'}`);
 }

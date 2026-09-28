@@ -11,7 +11,7 @@ export default async function JobsAdminPage() {
   const items = await jobsRepo.listAll();
   return (
     <>
-      <PageHeader title="Job Openings" description='"Open Positions" on the Careers page.' actionHref="/bys-panel-d10224a364/jobs/new" actionLabel="Add job" />
+      <PageHeader siteHref="/careers" title="Job Openings" description='"Open Positions" on the Careers page.' actionHref="/bys-panel-d10224a364/jobs/new" actionLabel="Add job" />
       <StatusAlert />
       <AdminTable
         rows={items}

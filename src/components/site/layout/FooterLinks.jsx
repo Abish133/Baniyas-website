@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { getSiteContact } from '@/lib/content';
-import AddressLines from '@/components/site/common/AddressLines';
+import { getSiteContact, getSiteSettings } from '@/lib/content';
+import LineBreaks from '@/components/site/common/LineBreaks';
 
 export async function FooterAddress({ prefix }) {
   const contact = await getSiteContact();
@@ -10,7 +10,7 @@ export async function FooterAddress({ prefix }) {
       <div className={`${prefix}-widget-address`}>
         <h6>
           <a href={contact.mapUrl} target="_blank" rel="noreferrer">
-            <AddressLines lines={contact.addressLines} />
+            <LineBreaks lines={contact.addressLines} />
           </a>
         </h6>
         <br />
@@ -43,14 +43,23 @@ export function FooterQuickLinks({ prefix }) {
   );
 }
 
-export function FooterSupport({ prefix }) {
+/** Links to the legal pages that have text (Admin → Legal Pages); hidden when there are none. */
+export async function FooterSupport({ prefix }) {
+  const s = await getSiteSettings();
+  const links = [
+    s['legal.terms'] && { href: '/terms', label: 'Terms & Conditions' },
+    s['legal.privacy'] && { href: '/privacy', label: 'Privacy Policy' },
+  ].filter(Boolean);
+  if (!links.length) return null;
+
   return (
     <div className={`${prefix}-widget address`}>
       <h4>Support</h4>
       <div className="footer-widget-menu">
         <ul>
-          <li><Link href="/contact">Term &amp; Conditions</Link></li>
-          <li><Link href="/contact">Privacy policy</Link></li>
+          {links.map((link) => (
+            <li key={link.href}><Link href={link.href}>{link.label}</Link></li>
+          ))}
         </ul>
       </div>
     </div>

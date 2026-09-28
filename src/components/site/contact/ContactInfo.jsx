@@ -1,5 +1,5 @@
 import { getSiteContact } from '@/lib/content';
-import AddressLines from '@/components/site/common/AddressLines';
+import LineBreaks from '@/components/site/common/LineBreaks';
 
 function Item({ icon, label, children }) {
   return (
@@ -32,7 +32,7 @@ export async function ContactInfo() {
         <Item icon="flaticon-email-3" label="Email Address:"><a href={contact.email.href}>{contact.email.label}</a></Item>
         <Item icon="flaticon-location-1" label="Location:">
           <a href={contact.mapUrl} target="_blank" rel="noreferrer">
-            <AddressLines lines={contact.addressLines} />
+            <LineBreaks lines={contact.addressLines} />
           </a>
         </Item>
       </div>

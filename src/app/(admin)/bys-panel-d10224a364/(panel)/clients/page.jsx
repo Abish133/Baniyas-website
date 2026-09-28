@@ -11,7 +11,7 @@ export default async function ClientsAdminPage() {
   const items = await clientsRepo.listAll();
   return (
     <>
-      <PageHeader title="Our Clients" description='Client names in the "Our Clients" grid on the About page.' actionHref="/bys-panel-d10224a364/clients/new" actionLabel="Add client" />
+      <PageHeader siteHref="/about" title="Our Clients" description='Client names in the "Our Clients" grid on the About page.' actionHref="/bys-panel-d10224a364/clients/new" actionLabel="Add client" />
       <StatusAlert />
       <AdminTable
         rows={items}

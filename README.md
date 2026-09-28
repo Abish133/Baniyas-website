@@ -34,14 +34,15 @@ Requirements: Node.js **20.9+**, MySQL 8+ (or MariaDB 10.6+).
 
 | Variable | Description |
 | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Public URL of the site (metadata). |
+| `NEXT_PUBLIC_SITE_URL` | **Set this in production** to the real address (e.g. `https://baniyasbuilders.com`). Used in the sitemap, robots.txt, share previews and Google business data. |
 | `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` | MySQL connection. |
 | `DB_CONNECTION_LIMIT` | Pool size (default 10). |
 | `AUTH_SECRET` | **Required.** Min 32 chars, signs the admin session. Generate: `node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"` |
 | `AUTH_SESSION_HOURS` | Admin session lifetime (default 12). |
 | `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` | First admin created by `db:seed` / `admin:create`. Change the password after first login. |
 | `UPLOAD_DIR` | Where uploaded images are stored (default `./storage/uploads`, served at `/uploads/...`). |
-| `CONTACT_FORWARD_URL` | Optional. Contact messages are always saved to MySQL; if set they are also POSTed (JSON) to this URL. |
+| `CONTACT_FORWARD_URL` | Optional. Contact messages are always saved to MySQL; if set they are also POSTed (JSON) to this URL (this is what emails them). |
+| `BACKUP_DIR` | Where `npm run backup` writes (default `./backups`). |
 
 ## 3. Scripts
 
@@ -51,10 +52,13 @@ Requirements: Node.js **20.9+**, MySQL 8+ (or MariaDB 10.6+).
 | `npm run db:seed` | Seeds the original content + first admin (skips tables that already have data). |
 | `npm run db:setup` | migrate + seed. |
 | `npm run admin:create -- email@x.com "Password1" "Name"` | Creates an admin or resets its password. |
+| `npm run backup` | Saves the database (`database.sql`) and uploads to `backups/<date-time>/`; keeps the 14 newest (`-- --keep 30` to change). Run it daily from cron / Task Scheduler. |
 | `npm run lint` | ESLint (Next.js core-web-vitals rules). |
 
 If your host does not allow Node scripts to create databases, create the database manually and import
-`database/migrations/001_initial_schema.sql` (e.g. with phpMyAdmin), then run `npm run db:seed`.
+every file in `database/migrations/` in order (e.g. with phpMyAdmin), then run `npm run db:seed`.
+
+After updating the code, always run `npm run db:migrate` once (new migrations: `002_admin_activity.sql`).
 
 ## 4. What is dynamic (Admin → sections)
 
@@ -67,7 +71,16 @@ If your host does not allow Node scripts to create databases, create the databas
 | **Portfolio** | Portfolio page grid (`/portfolio`, old `gallery.html`) |
 | **Our Clients** | About page "Our Partners / Our Clients" grid |
 | **Job Openings** | Careers page "Open Positions" (replaces the Google Sheet) |
-| **Messages** | Contact form submissions |
+| **Messages** | Contact form submissions (search, unread filter, mark all read, CSV download) |
+| **Page content → Home / About / Careers** | All other text, images, the banner video, FAQs, core values and benefits |
+| **Page content → Footer & Sidebar** | Footer texts, copyright line (year is automatic), sidebar menu text |
+| **Page content → Legal Pages** | `/terms` and `/privacy` (empty = page and footer link hidden) |
+| **Contact Details** | Phones, email, address, map, social links, WhatsApp button |
+| **SEO & Sharing** | Page titles/descriptions for Google and the link preview image |
+| **Admin Users / Activity Log** | Who can sign in, and who changed what |
+
+Page content screens are generated from `src/lib/content-config.js` (fields, limits and the original
+text as defaults). To make another text editable, add a field there and read it with `getSiteSettings()`.
 | **Section Headings** | Headings of the sections above + the home services image |
 
 Every list supports create / edit / delete / show-hide and a sort order.
@@ -96,11 +109,11 @@ Rules live in `src/lib/validation/image-rules.js` and `src/lib/validation/schema
 ```
 baniyas-next/
 ├── database/
-│   ├── migrations/001_initial_schema.sql   # tables
+│   ├── migrations/                         # 001 tables, 002 activity log
 │   ├── seed-data.mjs                       # original site content
 │   └── seed-services.json
 ├── public/assets/                          # original theme CSS, fonts, images (unchanged)
-├── scripts/                                # migrate / seed / create-admin CLIs
+├── scripts/                                # migrate / seed / create-admin / backup CLIs
 ├── storage/uploads/                        # admin uploads (git-ignored)
 └── src/
     ├── proxy.js                            # protects /bys-panel-d10224a364/* (Next 16 "proxy" = middleware)
@@ -111,7 +124,8 @@ baniyas-next/
     │   │   └── (pages)/                    # about, services, portfolio, careers, contact, 404
     │   ├── (admin)/bys-panel-d10224a364/                # admin panel (own root layout, Bootstrap 5.3)
     │   ├── api/contact/route.js            # contact form endpoint
-    │   └── uploads/[...path]/route.js      # serves uploaded images
+    │   ├── uploads/[...path]/route.js      # serves uploaded images/videos (with byte ranges)
+    │   └── sitemap.js, robots.js           # /sitemap.xml, /robots.txt
     ├── components/
     │   ├── site/                           # layout, sections, effects (animations)
     │   └── admin/                          # shell, tables, form fields, forms
@@ -122,6 +136,8 @@ baniyas-next/
     │   ├── validation/                     # zod schemas + image rules
     │   ├── admin/                          # generic CRUD action helpers
     │   ├── uploads.js                      # image inspection / storage
+    │   ├── content-config.js               # editable page content (admin fields + original text as defaults)
+    │   ├── seo.js                          # page metadata + schema.org business data
     │   └── constants/                      # company info, nav, icons, FAQs
     └── styles/admin.css
 ```
@@ -134,3 +150,11 @@ baniyas-next/
 - **Uploads** are stored outside `public/` because Next.js only serves files that exist in `public/` at build time.
   Back up `storage/uploads` together with the database.
 - The login rate limiter and contact-form flood protection are in-memory; use a shared store if you run several instances.
+  Client IPs are read from the **last** `x-forwarded-for` entry (the one your reverse proxy adds); logins are also
+  limited per email address, so forged IPs don't help an attacker.
+- **Contact form spam**: a hidden honeypot field and a minimum fill time; bots get a fake "sent" reply and nothing is stored.
+- **Security headers** (CSP, X-Frame-Options, HSTS in production, …) are set in `next.config.mjs`. If you add an
+  external script, font or iframe, allow its domain in the CSP there.
+- **Upload size**: `serverActions.bodySizeLimit` and `proxyClientMaxBodySize` are both 40 MB (banner video up to 30 MB).
+  If a reverse proxy sits in front (nginx `client_max_body_size`, Plesk, cPanel), raise its limit to 40 MB too.
+- The admin URL is hidden on purpose: it is not linked from the site or listed in `robots.txt`.

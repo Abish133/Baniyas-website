@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { requireAdmin } from '@/lib/auth/session';
 import { messagesRepo } from '@/lib/repositories';
 import { parseId } from '@/lib/admin/crud';
+import { logActivity } from '@/lib/admin/activity';
 
 export async function toggleMessageRead(formData) {
   await requireAdmin();
@@ -14,10 +15,21 @@ export async function toggleMessageRead(formData) {
   revalidatePath('/bys-panel-d10224a364', 'layout');
 }
 
+export async function markAllMessagesRead() {
+  await requireAdmin();
+  await messagesRepo.markAllRead();
+  revalidatePath('/bys-panel-d10224a364', 'layout');
+  redirect('/bys-panel-d10224a364/messages?status=allread');
+}
+
 export async function deleteMessage(formData) {
   await requireAdmin();
   const id = parseId(formData.get('id'));
-  if (id) await messagesRepo.removeMessage(id);
+  const message = id ? await messagesRepo.findMessage(id) : null;
+  if (message) {
+    await messagesRepo.removeMessage(id);
+    await logActivity('deleted', 'Messages', `Message from ${message.name}`);
+  }
   revalidatePath('/bys-panel-d10224a364', 'layout');
   redirect('/bys-panel-d10224a364/messages?status=deleted');
 }

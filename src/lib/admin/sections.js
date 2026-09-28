@@ -21,6 +21,8 @@ import { IMAGE_RULES } from '@/lib/validation/image-rules';
 // Server-side configuration of each simple CRUD section.
 export const SECTION_CONFIG = {
   trustedClients: {
+    label: 'Trusted Clients',
+    nameField: 'name',
     repo: trustedClientsRepo,
     schema: trustedClientSchema,
     fields: ['name', 'isActive', 'sortOrder'],
@@ -29,6 +31,8 @@ export const SECTION_CONFIG = {
     listPath: '/bys-panel-d10224a364/trusted-clients',
   },
   homeStats: {
+    label: 'Counters',
+    nameField: 'label',
     repo: homeStatsRepo,
     schema: homeStatSchema,
     fields: ['label', 'value', 'suffix', 'isActive', 'sortOrder'],
@@ -36,6 +40,8 @@ export const SECTION_CONFIG = {
     listPath: '/bys-panel-d10224a364/stats',
   },
   homeProjects: {
+    label: 'Project Showcase',
+    nameField: 'title',
     repo: homeProjectsRepo,
     schema: homeProjectSchema,
     fields: ['title', 'location', 'isActive', 'sortOrder'],
@@ -44,6 +50,8 @@ export const SECTION_CONFIG = {
     listPath: '/bys-panel-d10224a364/home-projects',
   },
   portfolioProjects: {
+    label: 'Portfolio',
+    nameField: 'caption',
     repo: portfolioProjectsRepo,
     schema: portfolioProjectSchema,
     fields: ['caption', 'isActive', 'sortOrder'],
@@ -51,12 +59,16 @@ export const SECTION_CONFIG = {
     listPath: '/bys-panel-d10224a364/portfolio',
   },
   clients: {
+    label: 'Our Clients',
+    nameField: 'name',
     repo: clientsRepo,
     schema: clientSchema,
     fields: ['name', 'isActive', 'sortOrder'],
     listPath: '/bys-panel-d10224a364/clients',
   },
   jobs: {
+    label: 'Job Openings',
+    nameField: 'title',
     repo: jobsRepo,
     schema: jobSchema,
     fields: ['title', 'jobType', 'location', 'experience', 'requirements', 'applyLink', 'isActive', 'sortOrder'],

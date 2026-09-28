@@ -33,3 +33,22 @@ export async function emailTaken(email, excludeId) {
   const row = await queryOne('SELECT id FROM admin_users WHERE email = ? AND id <> ?', [email, excludeId]);
   return Boolean(row);
 }
+
+export async function listAdmins() {
+  const rows = await query('SELECT id, name, email, last_login_at, created_at FROM admin_users ORDER BY name ASC, id ASC');
+  return rows.map((row) => ({ ...toEntity(row), createdAt: row.created_at }));
+}
+
+export async function countAdmins() {
+  const row = await queryOne('SELECT COUNT(*) AS total FROM admin_users');
+  return Number(row.total);
+}
+
+export async function createAdmin({ name, email, passwordHash }) {
+  const result = await query('INSERT INTO admin_users (name, email, password_hash) VALUES (?, ?, ?)', [name, email, passwordHash]);
+  return result.insertId;
+}
+
+export async function removeAdmin(id) {
+  await query('DELETE FROM admin_users WHERE id = ?', [id]);
+}

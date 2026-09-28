@@ -2,9 +2,11 @@ import Link from 'next/link';
 import BrandLogo from './BrandLogo';
 import Copyright from './Copyright';
 import { FooterAddress, FooterQuickLinks, FooterSupport } from './FooterLinks';
+import { getSiteSettings } from '@/lib/content';
 
 /** Home page footer (cta__four + footer__four + copyright four). */
-export default function HomeFooter() {
+export default async function HomeFooter() {
+  const s = await getSiteSettings();
   return (
     <>
       <div className="cta__four">
@@ -13,10 +15,10 @@ export default function HomeFooter() {
             <div className="col-xl-12">
               <div className="cta__four-area t-center" style={{ backgroundImage: "url('/assets/img/page/subscribe.jpg')" }}>
                 <div className="cta__four-area-content">
-                  <h2 className="title_split_anim">Partner with us and let&apos;s build something remarkable together</h2>
+                  <h2 className="title_split_anim">{s['home.cta_title']}</h2>
                   <div className="item_bounce">
                     <Link className="build_button mt-40" href="/contact">
-                      Free Consultation<i className="flaticon-right-up"></i>
+                      {s['home.cta_button']}<i className="flaticon-right-up"></i>
                     </Link>
                   </div>
                 </div>
@@ -34,7 +36,7 @@ export default function HomeFooter() {
                   <div className="col-lg-4 col-sm-6">
                     <div className="footer__four-widget mr-40">
                       <BrandLogo className="" color="#000000" />
-                      <h5>We have Solutions for every construction</h5>
+                      <h5>{s['layout.footer_tagline']}</h5>
                     </div>
                   </div>
                   <div className="col-lg-3 col-sm-6 sm-mt-30">

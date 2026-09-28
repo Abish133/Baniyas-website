@@ -13,6 +13,7 @@ export default async function StatsPage() {
   return (
     <>
       <PageHeader
+        siteHref="/"
         title="Counters"
         description={`Animated figures in the home page "About" section (max ${LIMITS.homeStatsActive} visible).`}
         actionHref="/bys-panel-d10224a364/stats/new"

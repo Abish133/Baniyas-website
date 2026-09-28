@@ -35,6 +35,25 @@ export const changePasswordSchema = z
     message: 'Passwords do not match.',
   });
 
+const newPasswordRules = (label) =>
+  z
+    .string()
+    .min(8, `${label} must be at least 8 characters.`)
+    .max(64, `${label} must be at most 64 characters.`)
+    .regex(/[A-Za-z]/, `${label} must contain a letter.`)
+    .regex(/[0-9]/, `${label} must contain a number.`);
+
+/** Admin → Admin users. The password is required when creating, optional when editing. */
+export function adminUserSchema({ creating }) {
+  return z.object({
+    name: requiredText('Name', { min: 2, max: 80 }),
+    email: z.email('Enter a valid email address.').trim().toLowerCase().max(191),
+    password: creating
+      ? newPasswordRules('Password')
+      : z.union([z.literal(''), newPasswordRules('Password')]).optional().transform((v) => v || null),
+  });
+}
+
 export const profileSchema = z.object({
   name: requiredText('Name', { min: 2, max: 80 }),
   email: z.email('Enter a valid email address.').trim().toLowerCase().max(191),
@@ -168,14 +187,6 @@ export const jobSchema = z.object({
   sortOrder,
 });
 
-export const settingsSchema = z.object({
-  'home.trusted_clients_title': requiredText('Trusted clients heading', { min: 2, max: 40 }),
-  'home.services_subtitle': requiredText('Services sub heading', { min: 2, max: 40 }),
-  'home.services_title': requiredText('Services heading', { min: 2, max: 80 }),
-  'about.clients_subtitle': requiredText('Clients badge text', { min: 2, max: 30 }),
-  'about.clients_title': requiredText('Clients heading', { min: 2, max: 60 }),
-});
-
 const phoneNumber = (label) =>
   z
     .string({ error: `${label} is required.` })
@@ -206,6 +217,12 @@ export const contactSettingsSchema = z.object({
     .string()
     .trim()
     .refine((v) => !v || /^\+?[0-9()\s-]{6,25}$/.test(v), { message: 'Mobile number must be a valid phone number, e.g. +971 55 2070846.' })
+    .optional()
+    .transform((v) => v || ''),
+  'contact.whatsapp': z
+    .string()
+    .trim()
+    .refine((v) => !v || /^\+[0-9()\s-]{8,25}$/.test(v), { message: 'WhatsApp number must include the country code, e.g. +971 55 2070846.' })
     .optional()
     .transform((v) => v || ''),
   'contact.email': z.email('Enter a valid email address.').trim().max(191, 'Email is too long.'),

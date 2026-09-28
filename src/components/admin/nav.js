@@ -5,7 +5,17 @@ export const ADMIN_NAV = [
     items: [{ href: '/bys-panel-d10224a364', label: 'Dashboard', icon: 'fa-regular fa-grid-2', exact: true }],
   },
   {
-    heading: 'Home page',
+    heading: 'Page content',
+    items: [
+      { href: '/bys-panel-d10224a364/content/home', label: 'Home page', icon: 'fa-regular fa-house' },
+      { href: '/bys-panel-d10224a364/content/about', label: 'About page', icon: 'fa-regular fa-building' },
+      { href: '/bys-panel-d10224a364/content/careers', label: 'Careers page', icon: 'fa-regular fa-user-plus' },
+      { href: '/bys-panel-d10224a364/content/layout', label: 'Footer & Sidebar', icon: 'fa-regular fa-table-layout' },
+      { href: '/bys-panel-d10224a364/content/legal', label: 'Legal Pages', icon: 'fa-regular fa-file-contract' },
+    ],
+  },
+  {
+    heading: 'Home page lists',
     items: [
       { href: '/bys-panel-d10224a364/trusted-clients', label: 'Trusted Clients', icon: 'fa-regular fa-handshake' },
       { href: '/bys-panel-d10224a364/stats', label: 'Counters', icon: 'fa-regular fa-chart-simple' },
@@ -26,7 +36,9 @@ export const ADMIN_NAV = [
     heading: 'Settings',
     items: [
       { href: '/bys-panel-d10224a364/contact', label: 'Contact Details', icon: 'fa-regular fa-address-book' },
-      { href: '/bys-panel-d10224a364/settings', label: 'Section Headings', icon: 'fa-regular fa-heading' },
+      { href: '/bys-panel-d10224a364/content/seo', label: 'SEO & Sharing', icon: 'fa-regular fa-magnifying-glass' },
+      { href: '/bys-panel-d10224a364/users', label: 'Admin Users', icon: 'fa-regular fa-user-shield' },
+      { href: '/bys-panel-d10224a364/activity', label: 'Activity Log', icon: 'fa-regular fa-clock-rotate-left' },
       { href: '/bys-panel-d10224a364/account', label: 'My Account', icon: 'fa-regular fa-user-gear' },
     ],
   },

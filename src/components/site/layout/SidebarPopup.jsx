@@ -3,10 +3,10 @@
 import BrandLogo from './BrandLogo';
 import SocialLinks from './SocialLinks';
 import { useSiteUI } from './SiteUIProvider';
-import AddressLines from '@/components/site/common/AddressLines';
+import LineBreaks from '@/components/site/common/LineBreaks';
 
 /** Off-canvas "hamburger" sidebar + mobile menu popup. */
-export default function SidebarPopup({ contact }) {
+export default function SidebarPopup({ contact, text }) {
   const { sidebarOpen, setSidebarOpen } = useSiteUI();
   return (
     <>
@@ -15,7 +15,7 @@ export default function SidebarPopup({ contact }) {
           <i className="fal fa-times"></i>
         </div>
         <BrandLogo />
-        <p>Redefining the construction industry with innovative solutions, cuttin-edge technology and sustainable practices</p>
+        <p>{text}</p>
         <div className="header__area-menubar-right-sidebar-popup-contact">
           <h4 className="mb-30">Address</h4>
           <div className="header__area-menubar-right-sidebar-popup-contact-item">
@@ -26,7 +26,7 @@ export default function SidebarPopup({ contact }) {
               <span>Location:</span>
               <h6>
                 <a href={contact.mapUrl} target="_blank" rel="noreferrer">
-                  <AddressLines lines={contact.addressLines} />
+                  <LineBreaks lines={contact.addressLines} />
                 </a>
               </h6>
             </div>

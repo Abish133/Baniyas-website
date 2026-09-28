@@ -56,7 +56,80 @@ export const IMAGE_RULES = {
     minRatio: 2, maxRatio: 2.8,
     recommended: '1060 × 453 px (wide banner)',
   },
+  homeAbout: {
+    label: 'About block image',
+    types: WEB_IMAGES,
+    maxSizeMB: 2,
+    minWidth: 400, minHeight: 300,
+    maxWidth: 3000, maxHeight: 3000,
+    recommended: '800 × 650 px, transparent PNG',
+  },
+  aboutIntro: {
+    label: 'About image',
+    types: WEB_IMAGES,
+    maxSizeMB: 3,
+    minWidth: 400, minHeight: 500,
+    maxWidth: 4000, maxHeight: 5000,
+    minRatio: 0.6, maxRatio: 0.95,
+    recommended: '564 × 740 px or larger (portrait)',
+  },
+  aboutBadge: {
+    label: 'Badge background',
+    types: WEB_IMAGES,
+    maxSizeMB: 2,
+    minWidth: 600, minHeight: 300,
+    maxWidth: 4000, maxHeight: 3000,
+    recommended: '1300 × 750 px (landscape)',
+  },
+  mdPhoto: {
+    label: 'Photo',
+    types: WEB_IMAGES,
+    maxSizeMB: 3,
+    minWidth: 300, minHeight: 300,
+    maxWidth: 4000, maxHeight: 5000,
+    minRatio: 0.6, maxRatio: 1.4,
+    recommended: 'at least 600 × 600 px, face centred (shown in a circle)',
+  },
+  orgChart: {
+    label: 'Organisation chart',
+    types: WEB_IMAGES,
+    maxSizeMB: 5,
+    minWidth: 800, minHeight: 800,
+    maxWidth: 8000, maxHeight: 8000,
+    recommended: 'high resolution PNG, e.g. 2650 × 3750 px',
+  },
+  careersIntro: {
+    label: 'Careers image',
+    types: WEB_IMAGES,
+    maxSizeMB: 3,
+    minWidth: 300, minHeight: 300,
+    maxWidth: 4000, maxHeight: 4000,
+    recommended: '624 × 740 px or larger',
+  },
+  shareImage: {
+    label: 'Share image',
+    types: ['image/jpeg', 'image/png'],
+    maxSizeMB: 2,
+    minWidth: 600, minHeight: 315,
+    maxWidth: 4000, maxHeight: 3000,
+    minRatio: 1.5, maxRatio: 2.3,
+    recommended: '1200 × 630 px (JPG or PNG)',
+  },
 };
+
+// Background video of the home banner.
+export const VIDEO_RULES = {
+  homeBanner: {
+    label: 'Banner video',
+    types: ['video/mp4', 'video/webm'],
+    maxSizeMB: 30,
+    recommended: 'MP4 (H.264), 1920 × 1080, 10–30 seconds, no sound, under 15 MB for fast loading',
+  },
+};
+
+export function describeVideoRules(rules) {
+  return `MP4 or WEBM · max ${rules.maxSizeMB} MB. Recommended: ${rules.recommended}.`;
+}
 
 const TYPE_LABELS = { 'image/jpeg': 'JPG', 'image/png': 'PNG', 'image/webp': 'WEBP' };
 

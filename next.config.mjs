@@ -1,13 +1,48 @@
+const isDev = process.env.NODE_ENV !== 'production';
+
+// Content-Security-Policy: only this site, Google Fonts and the Google Maps embed.
+// 'unsafe-inline' scripts are needed by Next.js' inline bootstrapping (no nonces);
+// 'unsafe-eval' only in development (React dev tooling).
+const CSP = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "img-src 'self' data: blob: https:",
+  "media-src 'self' blob:",
+  "connect-src 'self'",
+  'frame-src https://www.google.com https://maps.google.com',
+  "frame-ancestors 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join('; ');
+
+const SECURITY_HEADERS = [
+  { key: 'Content-Security-Policy', value: CSP },
+  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=()' },
+  ...(isDev ? [] : [{ key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' }]),
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   experimental: {
     serverActions: {
-      // Admin uploads go through Server Actions; the largest per-file limit is 5 MB
-      // and a form can carry up to three images.
-      bodySizeLimit: '16mb',
+      // Admin uploads go through Server Actions: images up to 5 MB (several per form)
+      // and the home banner video up to 30 MB.
+      bodySizeLimit: '40mb',
     },
+    // The proxy (proxy.js) buffers request bodies; above this size the body is silently
+    // cut off, which would corrupt large uploads. Keep it in line with bodySizeLimit.
+    proxyClientMaxBodySize: '40mb',
+  },
+  async headers() {
+    return [{ source: '/:path*', headers: SECURITY_HEADERS }];
   },
   // Keep the old static URLs working.
   async redirects() {

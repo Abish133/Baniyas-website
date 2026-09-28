@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Field, { CharCounter } from './Field';
 import { useFormField } from './AdminForm';
 
-function parseList(value, fallback) {
+export function parseList(value, fallback) {
   if (Array.isArray(value)) return value;
   if (typeof value === 'string' && value) {
     try {
@@ -17,7 +17,7 @@ function parseList(value, fallback) {
   return fallback;
 }
 
-function move(list, from, to) {
+export function move(list, from, to) {
   if (to < 0 || to >= list.length) return list;
   const copy = [...list];
   const [item] = copy.splice(from, 1);
@@ -25,7 +25,7 @@ function move(list, from, to) {
   return copy;
 }
 
-function RowButtons({ index, count, onMove, onRemove }) {
+export function RowButtons({ index, count, onMove, onRemove }) {
   return (
     <div className="btn-group btn-group-sm repeater__buttons">
       <button type="button" className="btn btn-outline-secondary" onClick={() => onMove(index, index - 1)} disabled={index === 0} title="Move up">

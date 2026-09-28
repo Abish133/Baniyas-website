@@ -1,9 +1,10 @@
+import { pageMetadata } from '@/lib/seo';
 import Breadcrumb from '@/components/site/common/Breadcrumb';
 import ContactForm from '@/components/site/contact/ContactForm';
 import { ContactInfo, ContactMap } from '@/components/site/contact/ContactInfo';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Contact Us' };
+export const generateMetadata = () => pageMetadata('contact');
 
 export default function ContactPage() {
   return (

@@ -200,8 +200,8 @@ function UserMenu({ admin }) {
           <Link href="/bys-panel-d10224a364/account" className="admin-user__item" role="menuitem" onClick={() => setOpen(false)}>
             <i className="fa-regular fa-user-gear"></i>My account
           </Link>
-          <Link href="/bys-panel-d10224a364/settings" className="admin-user__item" role="menuitem" onClick={() => setOpen(false)}>
-            <i className="fa-regular fa-sliders"></i>Section headings
+          <Link href="/bys-panel-d10224a364/activity" className="admin-user__item" role="menuitem" onClick={() => setOpen(false)}>
+            <i className="fa-regular fa-clock-rotate-left"></i>Activity log
           </Link>
           <form action={logout}>
             <button type="submit" className="admin-user__item admin-user__item--danger" role="menuitem">

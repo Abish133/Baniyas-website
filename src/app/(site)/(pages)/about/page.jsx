@@ -1,3 +1,4 @@
+import { pageMetadata } from '@/lib/seo';
 import { getAboutContent } from '@/lib/content';
 import Breadcrumb from '@/components/site/common/Breadcrumb';
 import AboutIntro from '@/components/site/about/AboutIntro';
@@ -8,7 +9,7 @@ import OrgChart from '@/components/site/about/OrgChart';
 import ClientsGrid from '@/components/site/about/ClientsGrid';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'About Us' };
+export const generateMetadata = () => pageMetadata('about');
 
 export default async function AboutPage() {
   const { settings, clients } = await getAboutContent();

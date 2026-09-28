@@ -11,7 +11,7 @@ export default async function PortfolioAdminPage() {
   const items = await portfolioProjectsRepo.listAll();
   return (
     <>
-      <PageHeader title="Portfolio" description="Project grid on the Portfolio page." actionHref="/bys-panel-d10224a364/portfolio/new" actionLabel="Add project" />
+      <PageHeader siteHref="/portfolio" title="Portfolio" description="Project grid on the Portfolio page." actionHref="/bys-panel-d10224a364/portfolio/new" actionLabel="Add project" />
       <StatusAlert />
       <AdminTable
         rows={items}

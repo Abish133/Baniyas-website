@@ -71,10 +71,30 @@ export async function deleteImage(publicUrl) {
   await fs.unlink(target).catch(() => {});
 }
 
+/** Detects MP4 / WEBM from the file bytes (not the client-supplied name or type). */
+function detectVideo(buffer) {
+  if (buffer.length > 12 && buffer.toString('ascii', 4, 8) === 'ftyp') return { mime: 'video/mp4', ext: 'mp4' };
+  if (buffer.length > 4 && buffer.readUInt32BE(0) === 0x1a45dfa3) return { mime: 'video/webm', ext: 'webm' };
+  return null;
+}
+
+/** Same idea as inspectImage, for the banner video. Returns { error } or { image: { buffer, ext } }. */
+export async function inspectVideo(file, rules) {
+  if (file.size > rules.maxSizeMB * 1024 * 1024) {
+    return { error: `${rules.label} must be ${rules.maxSizeMB} MB or smaller (selected file is ${(file.size / 1024 / 1024).toFixed(1)} MB).` };
+  }
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const format = detectVideo(buffer);
+  if (!format || !rules.types.includes(format.mime)) {
+    return { error: `${rules.label} must be an MP4 or WEBM video.` };
+  }
+  return { image: { buffer, ext: format.ext } };
+}
+
 /**
  * Validates several optional/required image fields of a form in one go.
  * @param {FormData} formData
- * @param {Array<{field:string, rules:object, required:boolean}>} specs
+ * @param {Array<{field:string, rules:object, required:boolean, video?:boolean}>} specs
  * @returns {Promise<{errors:object, images:object}>}
  */
 export async function inspectImageFields(formData, specs) {
@@ -86,7 +106,7 @@ export async function inspectImageFields(formData, specs) {
       if (spec.required) errors[spec.field] = `${spec.rules.label} is required.`;
       continue;
     }
-    const result = await inspectImage(file, spec.rules);
+    const result = spec.video ? await inspectVideo(file, spec.rules) : await inspectImage(file, spec.rules);
     if (result.error) errors[spec.field] = result.error;
     else images[spec.field] = result.image;
   }
