@@ -1,0 +1,37 @@
+{
+  "name": "baniyas-next",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bani Yas Building Contg. LLC website (Next.js + MySQL) with admin CMS",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "db:migrate": "node --env-file-if-exists=.env scripts/migrate.mjs",
+    "db:seed": "node --env-file-if-exists=.env scripts/seed.mjs",
+    "db:setup": "npm run db:migrate && npm run db:seed",
+    "admin:create": "node --env-file-if-exists=.env scripts/create-admin.mjs"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "bootstrap": "^5.3.8",
+    "gsap": "^3.15.0",
+    "image-size": "^2.0.4",
+    "jose": "^6.2.12",
+    "mysql2": "^3.24.4",
+    "next": "^16.3.6",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "server-only": "^0.0.1",
+    "swiper": "^14.2.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.6"
+  }
+}

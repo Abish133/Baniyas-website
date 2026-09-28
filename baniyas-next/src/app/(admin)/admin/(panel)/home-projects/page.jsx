@@ -1,0 +1,39 @@
+import { homeProjectsRepo } from '@/lib/repositories';
+import { LIMITS } from '@/lib/validation/schemas';
+import { toggleHomeProject, deleteHomeProject } from '@/actions/admin/home-projects';
+import PageHeader from '@/components/admin/PageHeader';
+import StatusAlert from '@/components/admin/StatusAlert';
+import AdminTable, { ActiveBadge, Thumb } from '@/components/admin/AdminTable';
+import RowActions from '@/components/admin/RowActions';
+
+export const metadata = { title: 'Project Showcase' };
+
+export default async function HomeProjectsPage({ searchParams }) {
+  const [{ status }, items] = await Promise.all([searchParams, homeProjectsRepo.listAll()]);
+  return (
+    <>
+      <PageHeader
+        title="Project Showcase"
+        description={`Hover-to-expand project images on the home page (max ${LIMITS.homeProjectsActive} visible).`}
+        actionHref="/admin/home-projects/new"
+        actionLabel="Add project"
+      />
+      <StatusAlert status={status} />
+      <AdminTable
+        rows={items}
+        columns={[
+          { key: 'image', label: 'Image', render: (row) => <Thumb src={row.image} alt={row.title} /> },
+          { key: 'title', label: 'Title', render: (row) => (<><div className="fw-semibold">{row.title}</div><div className="small text-muted">{row.location}</div></>) },
+          { key: 'sortOrder', label: 'Order', className: 'text-center' },
+          { key: 'isActive', label: 'Status', render: (row) => <ActiveBadge active={row.isActive} /> },
+          {
+            key: 'actions', label: '', className: 'text-end',
+            render: (row) => (
+              <RowActions id={row.id} isActive={row.isActive} editHref={`/admin/home-projects/${row.id}/edit`} toggleAction={toggleHomeProject} deleteAction={deleteHomeProject} itemLabel={`"${row.title}"`} />
+            ),
+          },
+        ]}
+      />
+    </>
+  );
+}
