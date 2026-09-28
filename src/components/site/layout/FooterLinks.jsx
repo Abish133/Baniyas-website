@@ -1,24 +1,26 @@
 import Link from 'next/link';
-import { CONTACT, MAP_URL } from '@/lib/constants/site';
+import { getSiteContact } from '@/lib/content';
+import AddressLines from '@/components/site/common/AddressLines';
 
-export function FooterAddress({ prefix }) {
+export async function FooterAddress({ prefix }) {
+  const contact = await getSiteContact();
   return (
     <div className={`${prefix}-widget address`}>
       <h4>Address</h4>
       <div className={`${prefix}-widget-address`}>
         <h6>
-          <a href={MAP_URL} target="_blank" rel="noreferrer">
-            Post Box No.9962, Unit No:301,
-            <br />
-            Emirates Islamic Tower,
-            <br />
-            Al Nakheel, RAK-UAE
+          <a href={contact.mapUrl} target="_blank" rel="noreferrer">
+            <AddressLines lines={contact.addressLines} />
           </a>
         </h6>
         <br />
-        <h6><a href={CONTACT.telephone.href}>{CONTACT.telephone.label}</a></h6>
-        <br />
-        <h6><a href={CONTACT.mobile.href}>{CONTACT.mobile.label}</a></h6>
+        <h6><a href={contact.telephone.href}>{contact.telephone.label}</a></h6>
+        {contact.mobile && (
+          <>
+            <br />
+            <h6><a href={contact.mobile.href}>{contact.mobile.label}</a></h6>
+          </>
+        )}
       </div>
     </div>
   );

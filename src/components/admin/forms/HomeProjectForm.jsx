@@ -9,7 +9,7 @@ import { saveHomeProject } from '@/actions/admin/home-projects';
 
 export default function HomeProjectForm({ item, defaults }) {
   return (
-    <AdminForm action={saveHomeProject} recordId={item?.id} initialValues={item || defaults} cancelHref="/admin/home-projects">
+    <AdminForm action={saveHomeProject} recordId={item?.id} initialValues={item || defaults} cancelHref="/bys-panel-d10224a364/home-projects">
       <FormLayout aside={<PublishingSection activeHelp="Up to 6 projects can be visible." />}>
         <FormSection title="Project details" description="Hover-to-expand strip on the home page." icon="fa-regular fa-images">
           <div className="row">

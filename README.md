@@ -18,7 +18,7 @@ cd baniyas-next
 npm install
 cp .env.example .env          # then edit the values (DB + AUTH_SECRET + admin login)
 npm run db:setup              # creates tables and seeds all current website content + first admin
-npm run dev                   # http://localhost:3000   admin: http://localhost:3000/admin
+npm run dev                   # http://localhost:3000   admin: http://localhost:3000/bys-panel-d10224a364
 ```
 
 Production:
@@ -103,13 +103,13 @@ baniyas-next/
 ├── scripts/                                # migrate / seed / create-admin CLIs
 ├── storage/uploads/                        # admin uploads (git-ignored)
 └── src/
-    ├── proxy.js                            # protects /admin/* (Next 16 "proxy" = middleware)
+    ├── proxy.js                            # protects /bys-panel-d10224a364/* (Next 16 "proxy" = middleware)
     ├── actions/admin/                      # Server Actions (CRUD, auth, settings)
     ├── app/
     │   ├── (site)/                         # public website (own root layout)
     │   │   ├── (home)/                     # home page + home header/footer
     │   │   └── (pages)/                    # about, services, portfolio, careers, contact, 404
-    │   ├── (admin)/admin/                  # admin panel (own root layout, Bootstrap 5.3)
+    │   ├── (admin)/bys-panel-d10224a364/                # admin panel (own root layout, Bootstrap 5.3)
     │   ├── api/contact/route.js            # contact form endpoint
     │   └── uploads/[...path]/route.js      # serves uploaded images
     ├── components/

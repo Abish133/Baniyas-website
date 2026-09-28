@@ -3,10 +3,10 @@
 import BrandLogo from './BrandLogo';
 import SocialLinks from './SocialLinks';
 import { useSiteUI } from './SiteUIProvider';
-import { CONTACT, MAP_URL } from '@/lib/constants/site';
+import AddressLines from '@/components/site/common/AddressLines';
 
 /** Off-canvas "hamburger" sidebar + mobile menu popup. */
-export default function SidebarPopup() {
+export default function SidebarPopup({ contact }) {
   const { sidebarOpen, setSidebarOpen } = useSiteUI();
   return (
     <>
@@ -25,12 +25,8 @@ export default function SidebarPopup() {
             <div className="header__area-menubar-right-sidebar-popup-contact-item-content">
               <span>Location:</span>
               <h6>
-                <a href={MAP_URL} target="_blank" rel="noreferrer">
-                  Post Box No.9962,
-                  <br />
-                  Unit No:301, Emirates Islamic Tower,
-                  <br />
-                  Al Nakheel, RAK-UAE
+                <a href={contact.mapUrl} target="_blank" rel="noreferrer">
+                  <AddressLines lines={contact.addressLines} />
                 </a>
               </h6>
             </div>
@@ -41,29 +37,31 @@ export default function SidebarPopup() {
             </div>
             <div className="header__area-menubar-right-sidebar-popup-contact-item-content">
               <span>Telephone Number:</span>
-              <h6><a href={CONTACT.telephone.href}>{CONTACT.telephone.label}</a></h6>
+              <h6><a href={contact.telephone.href}>{contact.telephone.label}</a></h6>
             </div>
           </div>
-          <div className="header__area-menubar-right-sidebar-popup-contact-item">
-            <div className="header__area-menubar-right-sidebar-popup-contact-item-icon">
-              <i className="flaticon-phone"></i>
+          {contact.mobile && (
+            <div className="header__area-menubar-right-sidebar-popup-contact-item">
+              <div className="header__area-menubar-right-sidebar-popup-contact-item-icon">
+                <i className="flaticon-phone"></i>
+              </div>
+              <div className="header__area-menubar-right-sidebar-popup-contact-item-content">
+                <span>Mobile Number:</span>
+                <h6><a href={contact.mobile.href}>{contact.mobile.label}</a></h6>
+              </div>
             </div>
-            <div className="header__area-menubar-right-sidebar-popup-contact-item-content">
-              <span>Mobile Number:</span>
-              <h6><a href={CONTACT.mobile.href}>{CONTACT.mobile.label}</a></h6>
-            </div>
-          </div>
+          )}
           <div className="header__area-menubar-right-sidebar-popup-contact-item">
             <div className="header__area-menubar-right-sidebar-popup-contact-item-icon">
               <i className="flaticon-email-3"></i>
             </div>
             <div className="header__area-menubar-right-sidebar-popup-contact-item-content">
               <span>Email Address:</span>
-              <h6><a href={CONTACT.email.href}>{CONTACT.email.label}</a></h6>
+              <h6><a href={contact.email.href}>{contact.email.label}</a></h6>
             </div>
           </div>
         </div>
-        <SocialLinks className="header__area-menubar-right-sidebar-popup-social" />
+        <SocialLinks className="header__area-menubar-right-sidebar-popup-social" links={contact.socialLinks} />
       </div>
       <div className={`sidebar-overlay${sidebarOpen ? ' show' : ''}`} onClick={() => setSidebarOpen(false)}></div>
     </>

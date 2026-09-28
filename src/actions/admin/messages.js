@@ -11,13 +11,13 @@ export async function toggleMessageRead(formData) {
   const id = parseId(formData.get('id'));
   const message = id ? await messagesRepo.findMessage(id) : null;
   if (message) await messagesRepo.markRead(id, !message.isRead);
-  revalidatePath('/admin', 'layout');
+  revalidatePath('/bys-panel-d10224a364', 'layout');
 }
 
 export async function deleteMessage(formData) {
   await requireAdmin();
   const id = parseId(formData.get('id'));
   if (id) await messagesRepo.removeMessage(id);
-  revalidatePath('/admin', 'layout');
-  redirect('/admin/messages?status=deleted');
+  revalidatePath('/bys-panel-d10224a364', 'layout');
+  redirect('/bys-panel-d10224a364/messages?status=deleted');
 }

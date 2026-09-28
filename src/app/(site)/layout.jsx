@@ -1,4 +1,5 @@
 import { SITE_NAME } from '@/lib/constants/site';
+import { getSiteContact } from '@/lib/content';
 import { SiteUIProvider } from '@/components/site/layout/SiteUIProvider';
 import SidebarPopup from '@/components/site/layout/SidebarPopup';
 import MobileMenu from '@/components/site/layout/MobileMenu';
@@ -7,6 +8,9 @@ import CustomCursor from '@/components/site/effects/CustomCursor';
 import ScrollToTop from '@/components/site/effects/ScrollToTop';
 import ThemeEffects from '@/components/site/effects/ThemeEffects';
 import LiveContentRefresh from '@/components/site/effects/LiveContentRefresh';
+
+// The sidebar and footers show contact details from the database.
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
@@ -27,7 +31,8 @@ const STYLESHEETS = [
   '/assets/css/site-custom.css',
 ];
 
-export default function SiteRootLayout({ children }) {
+export default async function SiteRootLayout({ children }) {
+  const contact = await getSiteContact();
   return (
     <html lang="en">
       <head>
@@ -39,7 +44,7 @@ export default function SiteRootLayout({ children }) {
         <SiteUIProvider>
           <Preloader />
           <CustomCursor />
-          <SidebarPopup />
+          <SidebarPopup contact={contact} />
           <MobileMenu />
           {children}
           <ScrollToTop />

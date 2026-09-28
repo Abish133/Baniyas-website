@@ -21,5 +21,5 @@ export async function proxy(request) {
 }
 
 export const config = {
-  matcher: ['/admin', '/admin/:path*'],
+  matcher: ['/bys-panel-d10224a364', '/bys-panel-d10224a364/:path*'],
 };

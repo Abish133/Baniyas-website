@@ -1,6 +1,8 @@
+import { getSiteContact } from '@/lib/content';
 import SocialLinks from './SocialLinks';
 
-export default function Copyright({ variant }) {
+export default async function Copyright({ variant }) {
+  const { socialLinks } = await getSiteContact();
   return (
     <div className={variant === 'home' ? 'copyright__area four' : 'copyright__area'}>
       <div className="container">
@@ -11,7 +13,7 @@ export default function Copyright({ variant }) {
             </div>
           </div>
           <div className="col-md-5">
-            <SocialLinks className="copyright__area-social t-right md-t-center" />
+            <SocialLinks className="copyright__area-social t-right md-t-center" links={socialLinks} />
           </div>
         </div>
       </div>

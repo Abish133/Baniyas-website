@@ -36,7 +36,7 @@ export function refreshSite() {
  *   repo, schema, fields: ['name', ...],
  *   images: [{ field, rules, folder, required }],   // `required` applies when creating
  *   activeLimit: { max, label },                     // optional cap on active rows
- *   listPath: '/admin/...',
+ *   listPath: '/bys-panel-d10224a364/...',
  * }
  */
 export async function saveEntity(config, formData) {

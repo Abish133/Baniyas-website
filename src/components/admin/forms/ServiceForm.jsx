@@ -27,7 +27,7 @@ function ServiceAside() {
 
 export default function ServiceForm({ item, defaults, limits }) {
   return (
-    <AdminForm action={saveService} recordId={item?.id} initialValues={item || defaults} cancelHref="/admin/services">
+    <AdminForm action={saveService} recordId={item?.id} initialValues={item || defaults} cancelHref="/bys-panel-d10224a364/services">
       <FormLayout aside={<ServiceAside />}>
         <FormSection title="Page details" description="Heading and address of the service on the Services page." icon="fa-regular fa-file-lines">
           <div className="row">

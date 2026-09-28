@@ -1,4 +1,5 @@
-import { CONTACT, MAP_URL, MAP_EMBED_URL } from '@/lib/constants/site';
+import { getSiteContact } from '@/lib/content';
+import AddressLines from '@/components/site/common/AddressLines';
 
 function Item({ icon, label, children }) {
   return (
@@ -14,7 +15,8 @@ function Item({ icon, label, children }) {
   );
 }
 
-export function ContactInfo() {
+export async function ContactInfo() {
+  const contact = await getSiteContact();
   return (
     <div className="contact__area-left mr-40 xl-mr-0">
       <div className="title">
@@ -25,16 +27,12 @@ export function ContactInfo() {
         </p>
       </div>
       <div className="contact__area-left-contact wow fadeInUp" data-wow-delay=".7s">
-        <Item icon="flaticon-phone" label="Phone:"><a href={CONTACT.telephone.href}>{CONTACT.telephone.label}</a></Item>
-        <Item icon="flaticon-phone" label="Mobile:"><a href={CONTACT.mobile.href}>{CONTACT.mobile.label}</a></Item>
-        <Item icon="flaticon-email-3" label="Email Address:"><a href={CONTACT.email.href}>{CONTACT.email.label}</a></Item>
+        <Item icon="flaticon-phone" label="Phone:"><a href={contact.telephone.href}>{contact.telephone.label}</a></Item>
+        {contact.mobile && <Item icon="flaticon-phone" label="Mobile:"><a href={contact.mobile.href}>{contact.mobile.label}</a></Item>}
+        <Item icon="flaticon-email-3" label="Email Address:"><a href={contact.email.href}>{contact.email.label}</a></Item>
         <Item icon="flaticon-location-1" label="Location:">
-          <a href={MAP_URL} target="_blank" rel="noreferrer">
-            Post Box No.9962, Unit No:301,
-            <br />
-            Emirates Islamic Tower,
-            <br />
-            Al Nakheel, RAK-UAE
+          <a href={contact.mapUrl} target="_blank" rel="noreferrer">
+            <AddressLines lines={contact.addressLines} />
           </a>
         </Item>
       </div>
@@ -42,7 +40,8 @@ export function ContactInfo() {
   );
 }
 
-export function ContactMap() {
+export async function ContactMap() {
+  const { mapEmbedUrl } = await getSiteContact();
   return (
     <div className="map section-padding pt-0">
       <div className="container">
@@ -50,7 +49,7 @@ export function ContactMap() {
           <div className="col-xl-12 wow fadeInUp" data-wow-delay=".4s">
             <div className="map-area">
               <iframe
-                src={MAP_EMBED_URL}
+                src={mapEmbedUrl}
                 width="600"
                 height="450"
                 style={{ border: 0 }}

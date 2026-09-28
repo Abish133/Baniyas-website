@@ -18,9 +18,9 @@ async function getDummyHash() {
 }
 
 function safeRedirectTarget(value) {
-  return typeof value === 'string' && value.startsWith('/admin') && !value.startsWith('//') && value !== '/admin/login'
+  return typeof value === 'string' && value.startsWith('/bys-panel-d10224a364') && !value.startsWith('//') && value !== '/bys-panel-d10224a364/login'
     ? value
-    : '/admin';
+    : '/bys-panel-d10224a364';
 }
 
 export async function login(_prevState, formData) {
@@ -50,7 +50,7 @@ export async function login(_prevState, formData) {
 
 export async function logout() {
   await deleteSession();
-  redirect('/admin/login');
+  redirect('/bys-panel-d10224a364/login');
 }
 
 export async function updateProfile(_prevState, formData) {

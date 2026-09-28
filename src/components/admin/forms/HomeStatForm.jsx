@@ -7,7 +7,7 @@ import { saveHomeStat } from '@/actions/admin/stats';
 
 export default function HomeStatForm({ item, defaults }) {
   return (
-    <AdminForm action={saveHomeStat} recordId={item?.id} initialValues={item || defaults} cancelHref="/admin/stats">
+    <AdminForm action={saveHomeStat} recordId={item?.id} initialValues={item || defaults} cancelHref="/bys-panel-d10224a364/stats">
       <FormLayout aside={<PublishingSection activeHelp="Maximum 3 counters can be visible (3-column layout)." />}>
         <FormSection title="Counter" description='Animated figure in the home page "About" section, e.g. 35+ Complete Projects.' icon="fa-regular fa-chart-simple">
           <div className="row">

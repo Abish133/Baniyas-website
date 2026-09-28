@@ -9,7 +9,7 @@ import { IMAGE_RULES } from '@/lib/validation/image-rules';
 import { inspectImageFields, saveImage, deleteImage } from '@/lib/uploads';
 import { formValues, parseId, failure, refreshSite } from '@/lib/admin/crud';
 
-const LIST_PATH = '/admin/services';
+const LIST_PATH = '/bys-panel-d10224a364/services';
 const FIELDS = [
   'cardTitle', 'title', 'slug', 'icon', 'showOnHome', 'showOnPage', 'isActive', 'sortOrder',
   'description1', 'description2', 'subtitle', 'mainContent', 'finalDescription', 'benefits', 'faqs',

@@ -1,7 +1,7 @@
 // Shared by proxy.js (edge-safe) and server code.
 export const SESSION_COOKIE = 'baniyas_admin_session';
-export const LOGIN_PATH = '/admin/login';
-export const ADMIN_HOME = '/admin';
+export const LOGIN_PATH = '/bys-panel-d10224a364/login';
+export const ADMIN_HOME = '/bys-panel-d10224a364';
 
 export function getSecretKey() {
   const secret = process.env.AUTH_SECRET;

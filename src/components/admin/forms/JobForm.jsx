@@ -7,7 +7,7 @@ import { saveJob } from '@/actions/admin/jobs';
 
 export default function JobForm({ item, defaults }) {
   return (
-    <AdminForm action={saveJob} recordId={item?.id} initialValues={item || defaults} cancelHref="/admin/jobs">
+    <AdminForm action={saveJob} recordId={item?.id} initialValues={item || defaults} cancelHref="/bys-panel-d10224a364/jobs">
       <FormLayout aside={<PublishingSection />}>
         <FormSection title="Position" description='Card in "Open Positions" on the Careers page.' icon="fa-regular fa-briefcase">
           <div className="row">

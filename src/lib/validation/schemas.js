@@ -176,6 +176,56 @@ export const settingsSchema = z.object({
   'about.clients_title': requiredText('Clients heading', { min: 2, max: 60 }),
 });
 
+const phoneNumber = (label) =>
+  z
+    .string({ error: `${label} is required.` })
+    .trim()
+    .refine((v) => /^\+?[0-9()\s-]{6,25}$/.test(v), { message: `${label} must be a valid phone number, e.g. +971 7 226 3131.` });
+
+const httpsUrl = (label) =>
+  z
+    .string({ error: `${label} is required.` })
+    .trim()
+    .min(1, `${label} is required.`)
+    .max(1000, `${label} must be at most 1000 characters.`)
+    .refine((v) => /^https:\/\/[^\s<>"]+$/i.test(v), { message: `${label} must be a link starting with https://` });
+
+/** Empty is allowed (stored as '' so the item is hidden on the site). */
+const optionalHttpsUrl = (label) =>
+  z
+    .string()
+    .trim()
+    .max(500, `${label} must be at most 500 characters.`)
+    .refine((v) => !v || /^https:\/\/[^\s<>"]+$/i.test(v), { message: `${label} must be a link starting with https://` })
+    .optional()
+    .transform((v) => v || '');
+
+export const contactSettingsSchema = z.object({
+  'contact.telephone': phoneNumber('Telephone number'),
+  'contact.mobile': z
+    .string()
+    .trim()
+    .refine((v) => !v || /^\+?[0-9()\s-]{6,25}$/.test(v), { message: 'Mobile number must be a valid phone number, e.g. +971 55 2070846.' })
+    .optional()
+    .transform((v) => v || ''),
+  'contact.email': z.email('Enter a valid email address.').trim().max(191, 'Email is too long.'),
+  'contact.address': requiredText('Address', { min: 5, max: 300 }).refine((v) => v.split('\n').length <= 5, {
+    message: 'Address can have at most 5 lines.',
+  }),
+  'contact.map_url': httpsUrl('Google Maps link'),
+  // Accepts the plain embed URL or the whole <iframe> code copied from Google Maps.
+  'contact.map_embed_url': z.preprocess(
+    (v) => (typeof v === 'string' ? (v.match(/src\s*=\s*["']([^"']+)["']/i)?.[1] ?? v).trim() : v),
+    httpsUrl('Map embed link').refine((v) => v.startsWith('https://www.google.com/maps/embed'), {
+      message: 'Map embed link must start with https://www.google.com/maps/embed (Google Maps → Share → Embed a map).',
+    })
+  ),
+  'social.facebook': optionalHttpsUrl('Facebook link'),
+  'social.x': optionalHttpsUrl('X (Twitter) link'),
+  'social.behance': optionalHttpsUrl('Behance link'),
+  'social.linkedin': optionalHttpsUrl('LinkedIn link'),
+});
+
 export const contactSchema = z.object({
   name: requiredText('Full name', { min: 2, max: 100 }),
   email: z.email('Enter a valid email address.').trim().max(191, 'Email is too long.'),

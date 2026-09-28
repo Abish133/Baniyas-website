@@ -1,5 +1,6 @@
 import 'server-only';
 import { cache } from 'react';
+import { SOCIAL_NETWORKS } from '@/lib/constants/site';
 import {
   trustedClientsRepo,
   homeStatsRepo,
@@ -32,3 +33,25 @@ export const getAboutContent = cache(async () => {
 export const getServicesPageContent = cache(() => servicesRepo.listForPage());
 export const getPortfolioProjects = cache(() => portfolioProjectsRepo.listActive());
 export const getJobOpenings = cache(() => jobsRepo.listActive());
+
+const phoneHref = (number) => `tel:${number.replace(/[^+\d]/g, '')}`;
+
+/** Company contact details shown in the footer, sidebar drawer and contact page. */
+export const getSiteContact = cache(async () => {
+  const settings = await settingsRepo.getSettings();
+  const mobile = settings['contact.mobile'];
+  const email = settings['contact.email'];
+  return {
+    telephone: { label: settings['contact.telephone'], href: phoneHref(settings['contact.telephone']) },
+    mobile: mobile ? { label: mobile, href: phoneHref(mobile) } : null,
+    email: { label: email, href: `mailto:${email}` },
+    addressLines: settings['contact.address'].split('\n').map((line) => line.trim()).filter(Boolean),
+    mapUrl: settings['contact.map_url'],
+    mapEmbedUrl: settings['contact.map_embed_url'],
+    socialLinks: SOCIAL_NETWORKS.filter((network) => settings[network.key]).map((network) => ({
+      href: settings[network.key],
+      icon: network.icon,
+      label: network.label,
+    })),
+  };
+});

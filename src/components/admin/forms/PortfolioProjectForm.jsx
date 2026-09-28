@@ -9,7 +9,7 @@ import { savePortfolioProject } from '@/actions/admin/portfolio';
 
 export default function PortfolioProjectForm({ item, defaults }) {
   return (
-    <AdminForm action={savePortfolioProject} recordId={item?.id} initialValues={item || defaults} cancelHref="/admin/portfolio">
+    <AdminForm action={savePortfolioProject} recordId={item?.id} initialValues={item || defaults} cancelHref="/bys-panel-d10224a364/portfolio">
       <FormLayout aside={<PublishingSection />}>
         <FormSection title="Image" description="Project photo in the Portfolio page grid." icon="fa-regular fa-image">
           <ImageField name="image" label="Project image" rules={IMAGE_RULES.portfolioProject} currentUrl={item?.image} required />

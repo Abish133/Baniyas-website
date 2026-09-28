@@ -2,31 +2,32 @@
 export const ADMIN_NAV = [
   {
     heading: null,
-    items: [{ href: '/admin', label: 'Dashboard', icon: 'fa-regular fa-grid-2', exact: true }],
+    items: [{ href: '/bys-panel-d10224a364', label: 'Dashboard', icon: 'fa-regular fa-grid-2', exact: true }],
   },
   {
     heading: 'Home page',
     items: [
-      { href: '/admin/trusted-clients', label: 'Trusted Clients', icon: 'fa-regular fa-handshake' },
-      { href: '/admin/stats', label: 'Counters', icon: 'fa-regular fa-chart-simple' },
-      { href: '/admin/home-projects', label: 'Project Showcase', icon: 'fa-regular fa-images' },
+      { href: '/bys-panel-d10224a364/trusted-clients', label: 'Trusted Clients', icon: 'fa-regular fa-handshake' },
+      { href: '/bys-panel-d10224a364/stats', label: 'Counters', icon: 'fa-regular fa-chart-simple' },
+      { href: '/bys-panel-d10224a364/home-projects', label: 'Project Showcase', icon: 'fa-regular fa-images' },
     ],
   },
   {
     heading: 'Pages',
     items: [
-      { href: '/admin/services', label: 'Services', icon: 'fa-regular fa-helmet-safety' },
-      { href: '/admin/portfolio', label: 'Portfolio', icon: 'fa-regular fa-building' },
-      { href: '/admin/clients', label: 'Our Clients', icon: 'fa-regular fa-users' },
-      { href: '/admin/jobs', label: 'Job Openings', icon: 'fa-regular fa-briefcase' },
-      { href: '/admin/messages', label: 'Messages', icon: 'fa-regular fa-envelope', badge: 'unread' },
+      { href: '/bys-panel-d10224a364/services', label: 'Services', icon: 'fa-regular fa-helmet-safety' },
+      { href: '/bys-panel-d10224a364/portfolio', label: 'Portfolio', icon: 'fa-regular fa-building' },
+      { href: '/bys-panel-d10224a364/clients', label: 'Our Clients', icon: 'fa-regular fa-users' },
+      { href: '/bys-panel-d10224a364/jobs', label: 'Job Openings', icon: 'fa-regular fa-briefcase' },
+      { href: '/bys-panel-d10224a364/messages', label: 'Messages', icon: 'fa-regular fa-envelope', badge: 'unread' },
     ],
   },
   {
     heading: 'Settings',
     items: [
-      { href: '/admin/settings', label: 'Section Headings', icon: 'fa-regular fa-heading' },
-      { href: '/admin/account', label: 'My Account', icon: 'fa-regular fa-user-gear' },
+      { href: '/bys-panel-d10224a364/contact', label: 'Contact Details', icon: 'fa-regular fa-address-book' },
+      { href: '/bys-panel-d10224a364/settings', label: 'Section Headings', icon: 'fa-regular fa-heading' },
+      { href: '/bys-panel-d10224a364/account', label: 'My Account', icon: 'fa-regular fa-user-gear' },
     ],
   },
 ];
