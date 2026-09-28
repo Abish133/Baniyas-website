@@ -8,8 +8,8 @@ import RowActions from '@/components/admin/RowActions';
 
 export const metadata = { title: 'Project Showcase' };
 
-export default async function HomeProjectsPage({ searchParams }) {
-  const [{ status }, items] = await Promise.all([searchParams, homeProjectsRepo.listAll()]);
+export default async function HomeProjectsPage() {
+  const items = await homeProjectsRepo.listAll();
   return (
     <>
       <PageHeader
@@ -18,9 +18,10 @@ export default async function HomeProjectsPage({ searchParams }) {
         actionHref="/admin/home-projects/new"
         actionLabel="Add project"
       />
-      <StatusAlert status={status} />
+      <StatusAlert />
       <AdminTable
         rows={items}
+        emptyAction={{ href: '/admin/home-projects/new', label: 'Add project' }}
         columns={[
           { key: 'image', label: 'Image', render: (row) => <Thumb src={row.image} alt={row.title} /> },
           { key: 'title', label: 'Title', render: (row) => (<><div className="fw-semibold">{row.title}</div><div className="small text-muted">{row.location}</div></>) },

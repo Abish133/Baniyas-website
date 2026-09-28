@@ -9,7 +9,8 @@ export default function HomeServices({ subtitle, title, image, services }) {
           <div className="col-xl-5 col-lg-6 lg-mb-25">
             <div className="services__four-title section-padding pb-0">
               <span className="subtitle wow fadeInLeft" data-wow-delay=".4s">{subtitle}</span>
-              <h2 className="title_split_anim">{title}</h2>
+              {/* SplitText rewrites this markup, so a changed heading must replace the element. */}
+              <h2 className="title_split_anim" key={title}>{title}</h2>
               <div className="item_bounce">
                 <Link className="build_button mt-40" href="/services">
                   Learn more<i className="flaticon-right-up"></i>

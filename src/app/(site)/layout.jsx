@@ -6,6 +6,7 @@ import Preloader from '@/components/site/effects/Preloader';
 import CustomCursor from '@/components/site/effects/CustomCursor';
 import ScrollToTop from '@/components/site/effects/ScrollToTop';
 import ThemeEffects from '@/components/site/effects/ThemeEffects';
+import LiveContentRefresh from '@/components/site/effects/LiveContentRefresh';
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
@@ -43,6 +44,7 @@ export default function SiteRootLayout({ children }) {
           {children}
           <ScrollToTop />
           <ThemeEffects />
+          <LiveContentRefresh />
         </SiteUIProvider>
       </body>
     </html>

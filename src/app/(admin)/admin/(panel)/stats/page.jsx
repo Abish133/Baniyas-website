@@ -8,8 +8,8 @@ import RowActions from '@/components/admin/RowActions';
 
 export const metadata = { title: 'Counters' };
 
-export default async function StatsPage({ searchParams }) {
-  const [{ status }, items] = await Promise.all([searchParams, homeStatsRepo.listAll()]);
+export default async function StatsPage() {
+  const items = await homeStatsRepo.listAll();
   return (
     <>
       <PageHeader
@@ -18,9 +18,10 @@ export default async function StatsPage({ searchParams }) {
         actionHref="/admin/stats/new"
         actionLabel="Add counter"
       />
-      <StatusAlert status={status} />
+      <StatusAlert />
       <AdminTable
         rows={items}
+        emptyAction={{ href: '/admin/stats/new', label: 'Add counter' }}
         columns={[
           { key: 'value', label: 'Figure', render: (row) => <strong className="fs-5">{row.value}{row.suffix}</strong> },
           { key: 'label', label: 'Label' },

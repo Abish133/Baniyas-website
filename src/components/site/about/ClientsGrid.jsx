@@ -8,7 +8,8 @@ export default function ClientsGrid({ subtitle, title, clients }) {
           <div className="col-xl-12">
             <div className="section-title t-center">
               <span className="subtitle wow fadeInLeft" data-wow-delay=".4s">{subtitle}</span>
-              <h2 className="title_split_anim">{title}</h2>
+              {/* SplitText rewrites this markup, so a changed heading must replace the element. */}
+              <h2 className="title_split_anim" key={title}>{title}</h2>
             </div>
           </div>
         </div>

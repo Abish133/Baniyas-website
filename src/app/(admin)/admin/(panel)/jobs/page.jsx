@@ -7,14 +7,15 @@ import RowActions from '@/components/admin/RowActions';
 
 export const metadata = { title: 'Job Openings' };
 
-export default async function JobsAdminPage({ searchParams }) {
-  const [{ status }, items] = await Promise.all([searchParams, jobsRepo.listAll()]);
+export default async function JobsAdminPage() {
+  const items = await jobsRepo.listAll();
   return (
     <>
       <PageHeader title="Job Openings" description='"Open Positions" on the Careers page.' actionHref="/admin/jobs/new" actionLabel="Add job" />
-      <StatusAlert status={status} />
+      <StatusAlert />
       <AdminTable
         rows={items}
+        emptyAction={{ href: '/admin/jobs/new', label: 'Add job' }}
         columns={[
           { key: 'title', label: 'Title', render: (row) => (<><div className="fw-semibold">{row.title}</div><div className="small text-muted">{row.jobType} · {row.location}</div></>) },
           { key: 'experience', label: 'Experience' },

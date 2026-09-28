@@ -1,7 +1,7 @@
 /** Label + help + error wrapper used by every admin input. */
 export default function Field({ id, label, required, help, error, counter, children, className = '' }) {
   return (
-    <div className={`mb-3 ${className}`}>
+    <div className={`admin-field ${className}`}>
       {label && (
         <div className="d-flex justify-content-between align-items-end">
           <label htmlFor={id} className="form-label">

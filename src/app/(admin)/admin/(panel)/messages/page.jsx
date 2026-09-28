@@ -5,29 +5,36 @@ import PageHeader from '@/components/admin/PageHeader';
 import StatusAlert from '@/components/admin/StatusAlert';
 import AdminTable from '@/components/admin/AdminTable';
 import RowActions from '@/components/admin/RowActions';
+import { initials } from '@/components/admin/nav';
 
 export const metadata = { title: 'Messages' };
 
 const formatDate = (date) =>
   new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Dubai' }).format(new Date(date));
 
-export default async function MessagesPage({ searchParams }) {
-  const [{ status }, items] = await Promise.all([searchParams, messagesRepo.listMessages()]);
+export default async function MessagesPage() {
+  const items = await messagesRepo.listMessages();
   return (
     <>
       <PageHeader title="Messages" description="Submissions from the Contact page form." />
-      <StatusAlert status={status} />
+      <StatusAlert />
       <AdminTable
         rows={items}
-        emptyText="No messages yet."
+        emptyText="No messages yet. Submissions from the Contact page will appear here."
+        itemLabel="messages"
         columns={[
           {
             key: 'name', label: 'From',
             render: (row) => (
-              <Link href={`/admin/messages/${row.id}`} className={`text-decoration-none ${row.isRead ? 'text-body' : 'fw-bold'}`}>
-                {!row.isRead && <span className="badge text-bg-warning me-2">New</span>}
-                {row.name}
-                <div className="small text-muted fw-normal">{row.email}</div>
+              <Link href={`/admin/messages/${row.id}`} className={`admin-sender${row.isRead ? '' : ' is-unread'}`}>
+                <span className="admin-avatar">{initials(row.name)}</span>
+                <span className="min-w-0">
+                  <span className="admin-sender__name">
+                    {row.name}
+                    {!row.isRead && <span className="admin-pill-new">New</span>}
+                  </span>
+                  <span className="admin-sender__email">{row.email}</span>
+                </span>
               </Link>
             ),
           },
@@ -35,7 +42,7 @@ export default async function MessagesPage({ searchParams }) {
           { key: 'createdAt', label: 'Received', render: (row) => <span className="small text-nowrap">{formatDate(row.createdAt)}</span> },
           {
             key: 'actions', label: '', className: 'text-end',
-            render: (row) => <RowActions id={row.id} editHref={`/admin/messages/${row.id}`} deleteAction={deleteMessage} itemLabel={`the message from ${row.name}`} />,
+            render: (row) => <RowActions id={row.id} editHref={`/admin/messages/${row.id}`} editIcon="fa-regular fa-envelope-open-text" editLabel="Open" deleteAction={deleteMessage} itemLabel={`the message from ${row.name}`} />,
           },
         ]}
       />

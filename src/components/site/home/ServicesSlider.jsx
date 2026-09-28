@@ -15,8 +15,19 @@ function padForLoop(items) {
   return out;
 }
 
-/** Home "services_four_slide" carousel — same options as the original theme. */
+/**
+ * Home "services_four_slide" carousel. Swiper (loop mode) moves the slide nodes around,
+ * so React must never patch them in place: any change to the services remounts the slider.
+ */
 export default function ServicesSlider({ services }) {
+  const signature = services
+    .map((s) => [s.id, s.cardTitle, s.icon, s.slug, s.showOnPage].join(':'))
+    .join('|');
+  return <SliderTrack key={signature} services={services} />;
+}
+
+/** Same options as the original theme. */
+function SliderTrack({ services }) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -34,7 +45,7 @@ export default function ServicesSlider({ services }) {
       },
     });
     return () => swiper.destroy(true, true);
-  }, [services]);
+  }, []);
 
   return (
     <div className="swiper services_four_slide data_cursor" data-cursor-text="Drag" ref={ref}>

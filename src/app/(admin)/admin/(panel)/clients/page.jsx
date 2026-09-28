@@ -7,14 +7,15 @@ import RowActions from '@/components/admin/RowActions';
 
 export const metadata = { title: 'Our Clients' };
 
-export default async function ClientsAdminPage({ searchParams }) {
-  const [{ status }, items] = await Promise.all([searchParams, clientsRepo.listAll()]);
+export default async function ClientsAdminPage() {
+  const items = await clientsRepo.listAll();
   return (
     <>
       <PageHeader title="Our Clients" description='Client names in the "Our Clients" grid on the About page.' actionHref="/admin/clients/new" actionLabel="Add client" />
-      <StatusAlert status={status} />
+      <StatusAlert />
       <AdminTable
         rows={items}
+        emptyAction={{ href: '/admin/clients/new', label: 'Add client' }}
         columns={[
           { key: 'name', label: 'Client name' },
           { key: 'sortOrder', label: 'Order', className: 'text-center' },

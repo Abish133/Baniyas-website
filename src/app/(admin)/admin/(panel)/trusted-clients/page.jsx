@@ -8,8 +8,8 @@ import RowActions from '@/components/admin/RowActions';
 
 export const metadata = { title: 'Trusted Clients' };
 
-export default async function TrustedClientsPage({ searchParams }) {
-  const [{ status }, items] = await Promise.all([searchParams, trustedClientsRepo.listAll()]);
+export default async function TrustedClientsPage() {
+  const items = await trustedClientsRepo.listAll();
   return (
     <>
       <PageHeader
@@ -18,9 +18,10 @@ export default async function TrustedClientsPage({ searchParams }) {
         actionHref="/admin/trusted-clients/new"
         actionLabel="Add client logo"
       />
-      <StatusAlert status={status} />
+      <StatusAlert />
       <AdminTable
         rows={items}
+        emptyAction={{ href: '/admin/trusted-clients/new', label: 'Add client logo' }}
         columns={[
           { key: 'logo', label: 'Logo', render: (row) => <Thumb src={row.logo} alt={row.name} wide /> },
           { key: 'name', label: 'Name' },

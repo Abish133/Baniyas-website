@@ -19,6 +19,7 @@ export function createWow({ offset = 0 } = {}) {
   let scrolled = true;
   let interval = null;
   let observer = null;
+  let resizeObserver = null;
 
   const applyStyle = (box, hidden) => {
     const duration = box.getAttribute('data-wow-duration');
@@ -51,6 +52,18 @@ export function createWow({ offset = 0 } = {}) {
     applyStyle(box, false);
     box.classList.add(ANIMATE_CLASS);
     box.addEventListener('animationend', resetAnimation);
+  };
+
+  // Undo register() for a box that was never revealed, so a later init() picks it up again
+  // (StrictMode re-runs effects, and layout elements survive route changes).
+  const unregister = (box) => {
+    box.removeAttribute(DONE_ATTR);
+    box.style.visibility = '';
+    box.style.animationName = '';
+    box.style.animationDuration = '';
+    box.style.animationDelay = '';
+    box.style.animationIterationCount = '';
+    delete box.__wowAnimationName;
   };
 
   const register = (box) => {
@@ -102,6 +115,9 @@ export function createWow({ offset = 0 } = {}) {
         }
       });
       observer.observe(document.body, { childList: true, subtree: true });
+      // Images and new content change the layout without scrolling; re-check visibility then too.
+      resizeObserver = new ResizeObserver(scrollHandler);
+      resizeObserver.observe(document.body);
     },
     sync,
     destroy() {
@@ -109,6 +125,8 @@ export function createWow({ offset = 0 } = {}) {
       window.removeEventListener('resize', scrollHandler);
       window.clearInterval(interval);
       observer?.disconnect();
+      resizeObserver?.disconnect();
+      boxes.forEach(unregister);
       boxes = [];
     },
   };

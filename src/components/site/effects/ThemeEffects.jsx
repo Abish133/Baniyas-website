@@ -28,7 +28,9 @@ function splitTitles(passes) {
         stagger: element.getAttribute('data-stagger') || pass.stagger,
       };
       if (onScroll == 1) {
-        config.scrollTrigger = { trigger: element, start: 'top 90%' };
+        // Finish the animation if the title is already scrolled past (e.g. reload mid-page),
+        // otherwise it would stay invisible.
+        config.scrollTrigger = { trigger: element, start: 'top 90%', toggleActions: 'play complete play none' };
       }
       gsap.from(split.words, config);
     });
@@ -55,11 +57,10 @@ export default function ThemeEffects() {
     const ctx = gsap.context(() => {
       // Bounce Animation
       gsap.set('.item_bounce', { opacity: 0, y: -100 });
-      ScrollTrigger.batch('.item_bounce', {
-        onEnter: (batch) =>
-          gsap.to(batch, { opacity: 1, y: 0, stagger: 0.4, duration: 1.5, ease: 'bounce' }),
-        start: 'top 90%',
-      });
+      const bounceIn = (batch) =>
+        gsap.to(batch, { opacity: 1, y: 0, stagger: 0.4, duration: 1.5, ease: 'bounce', overwrite: 'auto' });
+      // onLeave/onEnterBack reveal buttons that are already above the viewport on load.
+      ScrollTrigger.batch('.item_bounce', { onEnter: bounceIn, onLeave: bounceIn, onEnterBack: bounceIn, start: 'top 90%' });
       // Split Title
       splitTitles([
         { duration: 0.8, delay: 0.2, stagger: 0.06 },
@@ -67,12 +68,18 @@ export default function ThemeEffects() {
       ]);
     });
 
-    // Images/fonts may change the layout after first paint.
-    const refresh = () => ScrollTrigger.refresh();
-    window.addEventListener('load', refresh);
+    // Images, fonts and refreshed CMS content change the layout after first paint
+    // (window "load" never fires again after a client-side navigation).
+    let refreshTimer;
+    const resizeObserver = new ResizeObserver(() => {
+      clearTimeout(refreshTimer);
+      refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 150);
+    });
+    resizeObserver.observe(document.body);
 
     return () => {
-      window.removeEventListener('load', refresh);
+      resizeObserver.disconnect();
+      clearTimeout(refreshTimer);
       ctx.revert();
       wow.destroy();
     };

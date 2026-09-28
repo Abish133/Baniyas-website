@@ -76,22 +76,24 @@ export function CheckboxField({ name, label, help, className }) {
   const id = useId();
   const { error, value } = useFormField(name);
   return (
-    <div className={`mb-3 ${className || ''}`}>
-      <div className="form-check form-switch">
-        <input
-          id={id}
-          name={name}
-          type="checkbox"
-          role="switch"
-          className={`form-check-input${error ? ' is-invalid' : ''}`}
-          defaultChecked={value === true || value === 'on'}
-        />
-        <label className="form-check-label" htmlFor={id}>
-          {label}
-        </label>
-      </div>
+    <div className={`admin-field ${className || ''}`}>
+      <label className={`admin-switch${error ? ' is-invalid' : ''}`} htmlFor={id}>
+        <span className="admin-switch__text">
+          <span className="admin-switch__label">{label}</span>
+          {help && <span className="admin-switch__help">{help}</span>}
+        </span>
+        <span className="form-check form-switch m-0">
+          <input
+            id={id}
+            name={name}
+            type="checkbox"
+            role="switch"
+            className={`form-check-input${error ? ' is-invalid' : ''}`}
+            defaultChecked={value === true || value === 'on'}
+          />
+        </span>
+      </label>
       {error && <div className="invalid-feedback d-block">{error}</div>}
-      {help && <div className="form-text">{help}</div>}
     </div>
   );
 }

@@ -7,8 +7,8 @@ import RowActions from '@/components/admin/RowActions';
 
 export const metadata = { title: 'Services' };
 
-export default async function ServicesAdminPage({ searchParams }) {
-  const [{ status }, items] = await Promise.all([searchParams, servicesRepo.listAll()]);
+export default async function ServicesAdminPage() {
+  const items = await servicesRepo.listAll();
   return (
     <>
       <PageHeader
@@ -17,9 +17,10 @@ export default async function ServicesAdminPage({ searchParams }) {
         actionHref="/admin/services/new"
         actionLabel="Add service"
       />
-      <StatusAlert status={status} />
+      <StatusAlert />
       <AdminTable
         rows={items}
+        emptyAction={{ href: '/admin/services/new', label: 'Add service' }}
         columns={[
           {
             key: 'icon', label: 'Card',

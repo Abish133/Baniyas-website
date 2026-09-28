@@ -75,12 +75,19 @@ export default function ImageField({ name, label, rules, currentUrl, required, r
       <div className="image-field">
         <div className={`image-field__preview ${previewClass}`}>
           {preview ? (
-            <img src={preview.url} alt="New image preview" />
+            <>
+              <img src={preview.url} alt="New image preview" />
+              <span className="image-field__tag image-field__tag--new">New</span>
+            </>
           ) : showCurrent ? (
-            <img src={currentUrl} alt="Current image" />
+            <>
+              <img src={currentUrl} alt="Current image" />
+              <span className="image-field__tag">Current</span>
+            </>
           ) : (
-            <span className="text-muted small">
-              <i className="fa-regular fa-image fa-2x d-block mb-1"></i>No image
+            <span className="image-field__empty">
+              <i className="fa-regular fa-cloud-arrow-up"></i>
+              No image yet
             </span>
           )}
         </div>
