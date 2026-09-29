@@ -1,0 +1,39 @@
+# Keep the Docker build context small and free of secrets / local data.
+.git
+.github
+node_modules
+.next
+out
+build
+
+# env: only .env.production is used by the image (build + runtime); personal/dev files stay out
+.env
+.env.local
+.env.*.local
+.env.development
+
+# runtime data (mounted as volumes on the server)
+storage/uploads
+backups
+
+# tests & tooling
+tests
+test-results
+playwright-report
+coverage
+playwright.config.mjs
+vitest.config.mjs
+
+# docs / deployment files
+README.md
+deploy
+Dockerfile
+.dockerignore
+
+# editors / OS
+.vscode
+.idea
+*.log
+Thumbs.db
+desktop.ini
+.DS_Store

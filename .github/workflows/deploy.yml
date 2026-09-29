@@ -1,0 +1,106 @@
+name: Deploy
+
+# Every push to the "production" branch: after CI passes, build the Docker image, push it to
+# GitHub Container Registry, and ask Coolify to redeploy this one application (port 7111).
+# Coolify only restarts this app — other apps on the server are not touched.
+# Can also be started by hand: Actions → Deploy → Run workflow (choose the production branch).
+#
+# Repository secrets (Settings → Secrets and variables → Actions):
+#   COOLIFY_WEBHOOK  the app's deploy webhook URL from Coolify (Application → Webhooks)
+#   COOLIFY_TOKEN    a Coolify API token with "deploy" permission (Keys & Tokens → API tokens)
+#   APP_HEALTH_URL   http://YOUR-SERVER-IP:7111/api/health  (used to confirm the new version is live)
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [production]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  IMAGE: ghcr.io/abish133/baniyas-website
+
+jobs:
+  build:
+    # Only after a successful CI run for a push to "production" (never for pull requests).
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref_name == 'production') ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_branch == 'production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      version: ${{ steps.vars.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - id: vars
+        run: echo "version=$(git rev-parse --short=12 HEAD)" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          # The build reads .env.production (committed) and pre-renders the pages from the database.
+          build-args: |
+            APP_VERSION=${{ steps.vars.outputs.version }}
+          tags: |
+            ${{ env.IMAGE }}:production
+            ${{ env.IMAGE }}:${{ steps.vars.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    steps:
+      - name: Trigger Coolify deployment
+        env:
+          COOLIFY_WEBHOOK: ${{ secrets.COOLIFY_WEBHOOK }}
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+        run: |
+          status=$(curl -sS -o response.txt -w '%{http_code}' -H "Authorization: Bearer $COOLIFY_TOKEN" "$COOLIFY_WEBHOOK")
+          cat response.txt; echo
+          if [ "$status" -lt 200 ] || [ "$status" -ge 300 ]; then
+            echo "::error::Coolify did not accept the deployment (HTTP $status)"
+            exit 1
+          fi
+
+      - name: Wait until the new version is live
+        env:
+          HEALTH_URL: ${{ secrets.APP_HEALTH_URL }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          if [ -z "$HEALTH_URL" ]; then echo "APP_HEALTH_URL not set — skipping the check."; exit 0; fi
+          for i in $(seq 1 60); do
+            body=$(curl -s --max-time 5 "$HEALTH_URL" || true)
+            if echo "$body" | grep -q "\"version\":\"$VERSION\""; then
+              echo "Version $VERSION is live: $body"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::Version $VERSION did not come up within 10 minutes. Last response: $body"
+          echo "Check the deployment logs in Coolify."
+          exit 1

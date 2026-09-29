@@ -1,0 +1,80 @@
+name: CI
+
+# Lint, unit tests, production build and browser smoke tests on every push / pull request.
+# Uses a throw-away MySQL database seeded with the original website content.
+on:
+  push:
+    branches: [main, abishDev, production]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ci-root-password
+          MYSQL_DATABASE: baniyas_ci
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pci-root-password"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+
+    env:
+      # Test-only values (not secrets): a disposable database and session key.
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ci-root-password
+      DB_NAME: baniyas_ci
+      AUTH_SECRET: ci-only-secret-key-that-is-at-least-32-characters-long
+      ADMIN_NAME: CI Admin
+      ADMIN_EMAIL: ci-admin@example.com
+      ADMIN_PASSWORD: CiPassword123
+      NEXT_PUBLIC_SITE_URL: http://localhost:3100
+      UPLOAD_DIR: ./storage/uploads
+      NEXT_TELEMETRY_DISABLED: 1
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Create and seed the test database
+        run: npm run db:setup
+
+      - name: Production build (pre-renders the public pages from the database)
+        run: npm run build
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser smoke tests
+        run: npm run test:e2e
+
+      - name: Upload Playwright traces on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 7
