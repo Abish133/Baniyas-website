@@ -1,27 +1,90 @@
-# dependencies
+# ------------------------------------------------------------------
+# Dependencies
+# ------------------------------------------------------------------
 /node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
 
-# next.js
+# ------------------------------------------------------------------
+# Next.js build output
+# ------------------------------------------------------------------
 /.next/
 /out/
-next-env.d.ts
-
-# production
 /build
+next-env.d.ts
+*.tsbuildinfo
 
-# env files (keep .env.example)
+# ------------------------------------------------------------------
+# Secrets & environment: personal .env / .env.local files are never committed
+# ------------------------------------------------------------------
 .env
 .env.*
-!.env.example
+# ...except the per-environment settings, kept in this PRIVATE repository on purpose
+!.env.development
+!.env.production
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
 
-# uploaded media (admin uploads live outside /public)
+# ------------------------------------------------------------------
+# Runtime data (lives on the server, not in git)
+# ------------------------------------------------------------------
+# Admin uploads (images/videos saved from the admin panel)
 /storage/uploads/*
 !/storage/uploads/.gitkeep
 
-# misc
-.DS_Store
-*.pem
-npm-debug.log*
-
-# backups (npm run backup)
+# Database + uploads backups from `npm run backup`
 /backups/
+
+# Database dumps made by hand in the project root (migrations in database/ stay tracked)
+/*.sql
+/*.sql.gz
+
+# ------------------------------------------------------------------
+# Tests & tooling output
+# ------------------------------------------------------------------
+/coverage/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+.eslintcache
+.vitest-cache/
+
+# ------------------------------------------------------------------
+# Logs
+# ------------------------------------------------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+/logs/
+
+# ------------------------------------------------------------------
+# Editors & IDEs (shared VS Code settings can still be committed)
+# ------------------------------------------------------------------
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# ------------------------------------------------------------------
+# Operating system / OneDrive files
+# ------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+*.lnk
+~$*
