@@ -1,6 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@/styles/admin.css';
 
+// The admin panel shows live data for a signed-in user: never cache it.
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: { default: 'Admin', template: '%s · Bani Yas Admin' },
   robots: { index: false, follow: false },

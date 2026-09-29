@@ -20,7 +20,7 @@ export default function ProjectShowcase({ projects }) {
                     className={`portfolio__four-area-item${activeId === project.id ? ' active' : ''}`}
                     onMouseEnter={() => setActiveId(project.id)}
                   >
-                    <img src={project.image} alt={project.title} />
+                    <img src={project.image} alt={project.title} loading="lazy" decoding="async" />
                     <div className="portfolio__four-area-item-area">
                       <div className="portfolio__one-item-content">
                         <span>{project.location}</span>

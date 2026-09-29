@@ -3,7 +3,6 @@ import { getPortfolioProjects } from '@/lib/content';
 import Breadcrumb from '@/components/site/common/Breadcrumb';
 import PortfolioGrid from '@/components/site/portfolio/PortfolioGrid';
 
-export const dynamic = 'force-dynamic';
 export const generateMetadata = () => pageMetadata('portfolio');
 
 export default async function PortfolioPage() {

@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { imageSize } from 'image-size';
+import sharp from 'sharp';
 import { checkImage } from '@/lib/validation/image-rules';
 
 // Detected format (from file bytes, not the client-supplied name) -> mime / extension
@@ -13,6 +14,30 @@ const FORMATS = {
 };
 
 export const UPLOAD_URL_PREFIX = '/uploads/';
+
+// Uploaded photos are scaled down to this longest side (enough for full-width on large screens).
+const DEFAULT_MAX_SIDE = 2000;
+
+/**
+ * Shrinks and recompresses an uploaded image, keeping its format. Also applies the EXIF
+ * rotation and drops metadata (e.g. the GPS location of phone photos).
+ * Falls back to the original bytes if processing fails or would make the file bigger.
+ */
+async function compressImage(image) {
+  try {
+    const pipeline = sharp(image.buffer, { failOn: 'none' })
+      .rotate()
+      .resize({ width: image.maxSide, height: image.maxSide, fit: 'inside', withoutEnlargement: true });
+    if (image.ext === 'png') pipeline.png({ compressionLevel: 9, effort: 8 });
+    else if (image.ext === 'webp') pipeline.webp({ quality: 82, effort: 5 });
+    else pipeline.jpeg({ quality: 82, mozjpeg: true, progressive: true });
+    const output = await pipeline.toBuffer();
+    return output.length < image.buffer.length ? output : image.buffer;
+  } catch (error) {
+    console.error('[uploads] could not compress image, storing original:', error.message);
+    return image.buffer;
+  }
+}
 
 export function uploadRoot() {
   return path.resolve(/*turbopackIgnore: true*/ process.cwd(), process.env.UPLOAD_DIR || './storage/uploads');
@@ -49,7 +74,7 @@ export async function inspectImage(file, rules) {
 
   const error = checkImage({ size: buffer.length, type: format.mime, width, height }, rules);
   if (error) return { error };
-  return { image: { buffer, ext: format.ext, width, height } };
+  return { image: { buffer, ext: format.ext, width, height, maxSide: rules.outputMaxSide || DEFAULT_MAX_SIDE } };
 }
 
 /** Writes a validated image to disk and returns its public URL (/uploads/<folder>/<file>). */
@@ -58,7 +83,9 @@ export async function saveImage(image, folder) {
   const dir = path.join(/*turbopackIgnore: true*/ uploadRoot(), safeFolder);
   await fs.mkdir(dir, { recursive: true });
   const name = `${Date.now()}-${crypto.randomBytes(6).toString('hex')}.${image.ext}`;
-  await fs.writeFile(path.join(dir, name), image.buffer);
+  // Videos are stored as uploaded; images are resized/compressed first.
+  const bytes = image.maxSide ? await compressImage(image) : image.buffer;
+  await fs.writeFile(path.join(dir, name), bytes);
   return `${UPLOAD_URL_PREFIX}${safeFolder}/${name}`;
 }
 

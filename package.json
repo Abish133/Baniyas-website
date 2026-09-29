@@ -12,7 +12,8 @@
     "db:seed": "node --env-file-if-exists=.env scripts/seed.mjs",
     "db:setup": "npm run db:migrate && npm run db:seed",
     "admin:create": "node --env-file-if-exists=.env scripts/create-admin.mjs",
-    "backup": "node --env-file-if-exists=.env scripts/backup.mjs"
+    "backup": "node --env-file-if-exists=.env scripts/backup.mjs",
+    "images:optimize": "node scripts/optimize-images.mjs"
   },
   "engines": {
     "node": ">=20.9.0"
@@ -28,6 +29,7 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "server-only": "^0.0.1",
+    "sharp": "^0.35.5",
     "swiper": "^14.2.0",
     "zod": "^4.6.5"
   },

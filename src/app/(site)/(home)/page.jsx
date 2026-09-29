@@ -6,8 +6,6 @@ import HomeServices from '@/components/site/home/HomeServices';
 import ProjectShowcase from '@/components/site/home/ProjectShowcase';
 import HomeFaq from '@/components/site/home/HomeFaq';
 
-// Content is managed in the admin panel, so always render fresh data.
-export const dynamic = 'force-dynamic';
 export const generateMetadata = () => pageMetadata('home');
 
 export default async function HomePage() {

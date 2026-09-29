@@ -56,6 +56,15 @@ export const IMAGE_RULES = {
     minRatio: 2, maxRatio: 2.8,
     recommended: '1060 × 453 px (wide banner)',
   },
+  bannerPoster: {
+    label: 'Banner still image',
+    types: ['image/jpeg', 'image/webp'],
+    maxSizeMB: 1,
+    minWidth: 1280, minHeight: 720,
+    maxWidth: 3840, maxHeight: 2160,
+    minRatio: 1.6, maxRatio: 1.9,
+    recommended: '1920 × 1080 px JPG, ideally the first frame of the video',
+  },
   homeAbout: {
     label: 'About block image',
     types: WEB_IMAGES,
@@ -92,6 +101,7 @@ export const IMAGE_RULES = {
   },
   orgChart: {
     label: 'Organisation chart',
+    outputMaxSide: 3000, // keep small text readable
     types: WEB_IMAGES,
     maxSizeMB: 5,
     minWidth: 800, minHeight: 800,
@@ -123,7 +133,7 @@ export const VIDEO_RULES = {
     label: 'Banner video',
     types: ['video/mp4', 'video/webm'],
     maxSizeMB: 30,
-    recommended: 'MP4 (H.264), 1920 × 1080, 10–30 seconds, no sound, under 15 MB for fast loading',
+    recommended: 'MP4 (H.264), 1920 × 1080, 10–30 seconds, no sound, ideally under 5 MB (compress with HandBrake first)',
   },
 };
 

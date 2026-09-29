@@ -42,7 +42,12 @@ const nextConfig = {
     proxyClientMaxBodySize: '40mb',
   },
   async headers() {
-    return [{ source: '/:path*', headers: SECURITY_HEADERS }];
+    return [
+      { source: '/:path*', headers: SECURITY_HEADERS },
+      // Theme files (CSS, fonts, images, video) are not fingerprinted, so cache them for
+      // 7 days rather than forever; admin uploads (/uploads) already have unique names.
+      ...(isDev ? [] : [{ source: '/assets/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=604800, stale-while-revalidate=86400' }] }]),
+    ];
   },
   // Keep the old static URLs working.
   async redirects() {

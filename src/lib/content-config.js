@@ -56,6 +56,10 @@ export const CONTENT_PAGES = {
           { key: 'home.banner_button1', label: 'Button 1 (to Contact)', max: 25, col: 'col-md-6', default: 'Start Today' },
           { key: 'home.banner_button2', label: 'Button 2 (to Portfolio)', max: 25, col: 'col-md-6', default: 'visit Portfolio' },
           { key: 'home.banner_video', label: 'Background video', type: 'video', rules: 'homeBanner', default: '/assets/img/banner/banner.mp4' },
+          {
+            key: 'home.banner_poster', label: 'Still image (shown until the video plays)', type: 'image', rules: 'bannerPoster',
+            default: '/assets/img/banner/banner-poster.jpg',
+          },
         ],
       },
       {

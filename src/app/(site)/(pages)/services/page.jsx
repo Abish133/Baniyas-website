@@ -1,17 +1,21 @@
+import { Suspense } from 'react';
 import { pageMetadata } from '@/lib/seo';
 import { getServicesPageContent } from '@/lib/content';
 import Breadcrumb from '@/components/site/common/Breadcrumb';
-import ServicesExplorer from '@/components/site/services/ServicesExplorer';
+import ServicesExplorer, { ServicesExplorerFromUrl } from '@/components/site/services/ServicesExplorer';
 
-export const dynamic = 'force-dynamic';
 export const generateMetadata = () => pageMetadata('services');
 
-export default async function ServicesPage({ searchParams }) {
-  const [{ service }, services] = await Promise.all([searchParams, getServicesPageContent()]);
+// Pre-rendered (ISR). The ?service=<slug> selection is read in the browser, so the page
+// does not have to be rendered per request; the pre-rendered HTML shows the first service.
+export default async function ServicesPage() {
+  const services = await getServicesPageContent();
   return (
     <>
       <Breadcrumb title="Services" />
-      <ServicesExplorer services={services} initialSlug={typeof service === 'string' ? service : undefined} />
+      <Suspense fallback={<ServicesExplorer services={services} />}>
+        <ServicesExplorerFromUrl services={services} />
+      </Suspense>
     </>
   );
 }

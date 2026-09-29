@@ -5,7 +5,7 @@ export default function BrandLogo({ color = '#ffffff', className = 'header__area
   return (
     <div className={className} style={{ display: 'flex', alignItems: 'center' }}>
       <Link href="/" style={{ marginRight: '-20px' }}>
-        <img src="/assets/img/logo.png" style={{ height: '106px' }} alt="logo" />
+        <img src="/assets/img/logo.webp" style={{ height: '106px' }} alt="logo" />
       </Link>
       <div>
         <div style={{ fontWeight: 'bold', fontSize: '24px', lineHeight: 1.2, color }}>BANIYAS</div>

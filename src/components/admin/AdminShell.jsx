@@ -65,7 +65,7 @@ function Sidebar({ pathname, collapsed, unreadMessages }) {
   return (
     <aside className="admin-sidebar" aria-label="Admin navigation">
       <Link href="/bys-panel-d10224a364" className="admin-sidebar__brand" onMouseEnter={(e) => showTip(e, 'Dashboard')} onMouseLeave={hideTip}>
-        <img src="/assets/img/logo.png" alt="" />
+        <img src="/assets/img/logo.webp" alt="" />
         <span className="admin-sidebar__brand-text">
           Bani Yas
           <small>Content Manager</small>

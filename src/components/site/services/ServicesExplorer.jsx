@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 function ServiceContent({ service }) {
   const hasDetailImages = service.detailImage1 || service.detailImage2;
@@ -17,12 +18,12 @@ function ServiceContent({ service }) {
         <div className="row mt-40 mb-40">
           {service.detailImage1 && (
             <div className="col-sm-6 sm-mb-25">
-              <img className="img_full" src={service.detailImage1} alt={`${service.title} — detail 1`} />
+              <img className="img_full" src={service.detailImage1} alt={`${service.title} — detail 1`} loading="lazy" decoding="async" />
             </div>
           )}
           {service.detailImage2 && (
             <div className="col-sm-6">
-              <img className="img_full" src={service.detailImage2} alt={`${service.title} — detail 2`} />
+              <img className="img_full" src={service.detailImage2} alt={`${service.title} — detail 2`} loading="lazy" decoding="async" />
             </div>
           )}
         </div>
@@ -65,6 +66,12 @@ function ServiceContent({ service }) {
       )}
     </>
   );
+}
+
+/** Opens the service named in ?service=<slug> (links from the home page slider). */
+export function ServicesExplorerFromUrl({ services }) {
+  const slug = useSearchParams().get('service') ?? undefined;
+  return <ServicesExplorer services={services} initialSlug={slug} />;
 }
 
 /** Sidebar of services + the selected service's details (services page). */

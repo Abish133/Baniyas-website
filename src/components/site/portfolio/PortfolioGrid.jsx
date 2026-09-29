@@ -11,7 +11,7 @@ export default function PortfolioGrid({ projects }) {
             <div className="col-xl-4 col-md-6 mt-25 wow fadeInUp" data-wow-delay={DELAYS[index % 3]} key={project.id}>
               <div className="portfolio__four-item">
                 {/* width="500" (as in the original markup) makes portrait photos fill the column like landscape ones */}
-                <img src={project.image} alt={project.caption} width="500" />
+                <img src={project.image} alt={project.caption} width="500" loading="lazy" decoding="async" />
                 <div className="portfolio__four-item-content">
                   <span>{project.caption}</span>
                 </div>

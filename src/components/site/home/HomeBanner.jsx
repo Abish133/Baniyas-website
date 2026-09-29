@@ -18,7 +18,7 @@ export default async function HomeBanner({ clientsTitle, trustedClients }) {
   return (
     <div className="banner__four">
       <div className="bg-video">
-        <video autoPlay muted loop playsInline id="myVideo" key={video}>
+        <video autoPlay muted loop playsInline id="myVideo" key={video} poster={s['home.banner_poster']} preload="auto">
           <source src={video} type={video.endsWith('.webm') ? 'video/webm' : 'video/mp4'} />
         </video>
       </div>

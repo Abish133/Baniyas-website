@@ -53,7 +53,7 @@ export default async function HomeAbout({ stats }) {
           </div>
           <div className="col-lg-4 lg-mt-25">
             <div className="about__four-right t-right wow img_right_animation">
-              <img src={s['home.about_image']} alt={s['home.about_title']} />
+              <img src={s['home.about_image']} alt={s['home.about_title']} loading="lazy" decoding="async" />
             </div>
           </div>
         </div>

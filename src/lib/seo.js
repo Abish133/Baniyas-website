@@ -46,7 +46,7 @@ export async function businessJsonLd() {
     address: {
       '@type': 'PostalAddress',
       streetAddress: contact.addressLines.map((line) => line.replace(/,\s*$/, '')).join(', '),
-      addressLocality: 'Ras Al Khaimah',
+      // The city is part of the admin-edited address (Contact Details), so it is not repeated here.
       addressCountry: 'AE',
     },
     hasMap: contact.mapUrl,

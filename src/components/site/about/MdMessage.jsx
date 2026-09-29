@@ -33,6 +33,8 @@ export default async function MdMessage() {
             >
               <img
                 src={s['about.md_image']}
+                loading="lazy"
+                decoding="async"
                 alt="Managing Director"
                 className="img-fluid"
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}

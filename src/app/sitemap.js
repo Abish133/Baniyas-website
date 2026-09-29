@@ -1,7 +1,8 @@
 import { SITE_URL } from '@/lib/seo';
 import { getSiteSettings } from '@/lib/content';
 
-export const dynamic = 'force-dynamic';
+// Rebuilt at most once an hour (the legal pages appear once they have text).
+export const revalidate = 3600;
 
 /** /sitemap.xml — public pages only (the legal pages when they have text). */
 export default async function sitemap() {

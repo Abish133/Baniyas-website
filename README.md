@@ -146,6 +146,28 @@ baniyas-next/
 
 - **Animations** — `src/components/site/effects/` ports the theme's `custom.js`: WOW reveal, GSAP bounce buttons,
   split-text titles, counter-up, custom cursor, scroll-to-top progress circle, Swiper slider.
+- **Rendering / caching** —
+  - **Public pages (ISR):** Home, About, Services, Portfolio, Careers, Contact, Terms, Privacy and `sitemap.xml` are
+    pre-rendered and served from cache. Every admin save calls `refreshSite()` → `revalidatePath('/', 'layout')`,
+    so the next visit rebuilds the page with the new content. The `revalidate = 3600` in `(site)/layout.jsx` is only
+    a safety net.
+  - **Services page:** the `?service=<slug>` choice is read in the browser (`useSearchParams` inside `<Suspense>`),
+    so the page can stay cached. The pre-rendered HTML shows the first service.
+  - **Per request (SSR):** the admin panel (`force-dynamic` in `(admin)/layout.jsx`), `/api/contact`, `/uploads/…`,
+    the CSV export and unknown URLs (404).
+  - **Static:** `robots.txt`.
+  - `next build` **needs the database**, because the public pages are rendered at build time. The cache lives in
+    `.next/cache`, so run the site as one long-running process (PM2 / systemd). Several instances would each have
+    their own cache.
+- **Images & video** —
+  - Admin uploads are shrunk to max 2000 px (the org chart 3000 px) and recompressed with `sharp` when saved;
+    EXIF rotation is applied and metadata (e.g. phone GPS) removed. Videos are stored as uploaded, so compress
+    them first (e.g. HandBrake, H.264, no audio, under ~5 MB).
+  - `npm run images:optimize` recompresses the theme images in `public/assets/img` in place (same names);
+    `npm run images:optimize -- storage/uploads` does the same for existing uploads, `-- --dry` only reports.
+  - Images below the first screen use `loading="lazy"`; the banner video has a still image (`poster`).
+  - `/assets/*` is cached by browsers for 7 days (`next.config.mjs`). After replacing a theme file under the same
+    name, returning visitors may see the old one for up to a week; give it a new name to update it immediately.
 - **Old URLs** (`/about.html`, `/gallery.html`, …) permanently redirect to the new routes (`next.config.mjs`).
 - **Uploads** are stored outside `public/` because Next.js only serves files that exist in `public/` at build time.
   Back up `storage/uploads` together with the database.
@@ -158,3 +180,8 @@ baniyas-next/
 - **Upload size**: `serverActions.bodySizeLimit` and `proxyClientMaxBodySize` are both 40 MB (banner video up to 30 MB).
   If a reverse proxy sits in front (nginx `client_max_body_size`, Plesk, cPanel), raise its limit to 40 MB too.
 - The admin URL is hidden on purpose: it is not linked from the site or listed in `robots.txt`.
+
+
+
+
+admin : http://localhost:3000/bys-panel-d10224a364

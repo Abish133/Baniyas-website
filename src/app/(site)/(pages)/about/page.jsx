@@ -8,7 +8,6 @@ import CoreValues from '@/components/site/about/CoreValues';
 import OrgChart from '@/components/site/about/OrgChart';
 import ClientsGrid from '@/components/site/about/ClientsGrid';
 
-export const dynamic = 'force-dynamic';
 export const generateMetadata = () => pageMetadata('about');
 
 export default async function AboutPage() {

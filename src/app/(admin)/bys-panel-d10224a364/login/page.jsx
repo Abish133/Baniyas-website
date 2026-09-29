@@ -9,7 +9,7 @@ export default async function LoginPage({ searchParams }) {
     <main className="admin-login">
       <section className="admin-login__visual" aria-hidden="true">
         <div className="admin-login__brand">
-          <img src="/assets/img/logo.png" alt="" />
+          <img src="/assets/img/logo.webp" alt="" />
           <span>
             Bani Yas
             <small>Building Contg. LLC</small>
@@ -22,7 +22,7 @@ export default async function LoginPage({ searchParams }) {
       </section>
       <section className="admin-login__panel">
         <div className="admin-login__card">
-          <img src="/assets/img/logo.png" alt="Bani Yas" className="admin-login__logo" />
+          <img src="/assets/img/logo.webp" alt="Bani Yas" className="admin-login__logo" />
           <h1>Welcome back</h1>
           <p className="admin-login__lead">Sign in to the content manager.</p>
           <LoginForm next={typeof next === 'string' ? next : ''} />

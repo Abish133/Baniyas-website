@@ -11,8 +11,11 @@ import ThemeEffects from '@/components/site/effects/ThemeEffects';
 import LiveContentRefresh from '@/components/site/effects/LiveContentRefresh';
 import WhatsAppButton from '@/components/site/layout/WhatsAppButton';
 
-// The sidebar and footers show contact details from the database.
-export const dynamic = 'force-dynamic';
+// Public pages are pre-rendered and cached (ISR). Every admin save calls
+// revalidatePath('/', 'layout') (refreshSite), so changes show on the next visit;
+// the hourly revalidation is only a safety net (and rolls the copyright year over).
+// Note: `next build` needs the database, because the pages are rendered at build time.
+export const revalidate = 3600;
 
 // Pages set their own title/description (see lib/seo.js); these are the fallbacks.
 export async function generateMetadata() {

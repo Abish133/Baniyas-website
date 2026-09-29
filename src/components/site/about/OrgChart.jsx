@@ -27,7 +27,7 @@ export default async function OrgChart() {
               </div>
             </div>
             <div className="col-md-6 image-column text-center">
-              <img src={s['about.org_image']} alt={s['about.org_heading']} className="img-fluid" />
+              <img src={s['about.org_image']} alt={s['about.org_heading']} className="img-fluid" loading="lazy" decoding="async" />
             </div>
           </div>
         </div>
