@@ -17,6 +17,7 @@ import {
   LIMITS,
 } from '@/lib/validation/schemas';
 import { IMAGE_RULES } from '@/lib/validation/image-rules';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 // Server-side configuration of each simple CRUD section.
 export const SECTION_CONFIG = {
@@ -28,7 +29,7 @@ export const SECTION_CONFIG = {
     fields: ['name', 'isActive', 'sortOrder'],
     images: [{ field: 'logo', rules: IMAGE_RULES.trustedClientLogo, folder: 'trusted-clients', required: true }],
     activeLimit: { max: LIMITS.trustedClientsActive, label: 'trusted client logos' },
-    listPath: '/bys-panel-d10224a364/trusted-clients',
+    listPath: `${ADMIN_BASE}/trusted-clients`,
   },
   homeStats: {
     label: 'Counters',
@@ -37,7 +38,7 @@ export const SECTION_CONFIG = {
     schema: homeStatSchema,
     fields: ['label', 'value', 'suffix', 'isActive', 'sortOrder'],
     activeLimit: { max: LIMITS.homeStatsActive, label: 'counters' },
-    listPath: '/bys-panel-d10224a364/stats',
+    listPath: `${ADMIN_BASE}/stats`,
   },
   homeProjects: {
     label: 'Project Showcase',
@@ -47,7 +48,7 @@ export const SECTION_CONFIG = {
     fields: ['title', 'location', 'isActive', 'sortOrder'],
     images: [{ field: 'image', rules: IMAGE_RULES.homeProject, folder: 'home-projects', required: true }],
     activeLimit: { max: LIMITS.homeProjectsActive, label: 'showcase projects' },
-    listPath: '/bys-panel-d10224a364/home-projects',
+    listPath: `${ADMIN_BASE}/home-projects`,
   },
   portfolioProjects: {
     label: 'Portfolio',
@@ -56,7 +57,7 @@ export const SECTION_CONFIG = {
     schema: portfolioProjectSchema,
     fields: ['caption', 'isActive', 'sortOrder'],
     images: [{ field: 'image', rules: IMAGE_RULES.portfolioProject, folder: 'portfolio', required: true }],
-    listPath: '/bys-panel-d10224a364/portfolio',
+    listPath: `${ADMIN_BASE}/portfolio`,
   },
   clients: {
     label: 'Our Clients',
@@ -64,7 +65,7 @@ export const SECTION_CONFIG = {
     repo: clientsRepo,
     schema: clientSchema,
     fields: ['name', 'isActive', 'sortOrder'],
-    listPath: '/bys-panel-d10224a364/clients',
+    listPath: `${ADMIN_BASE}/clients`,
   },
   jobs: {
     label: 'Job Openings',
@@ -72,6 +73,6 @@ export const SECTION_CONFIG = {
     repo: jobsRepo,
     schema: jobSchema,
     fields: ['title', 'jobType', 'location', 'experience', 'requirements', 'applyLink', 'isActive', 'sortOrder'],
-    listPath: '/bys-panel-d10224a364/jobs',
+    listPath: `${ADMIN_BASE}/jobs`,
   },
 };

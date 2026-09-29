@@ -2,7 +2,7 @@
 // Usage: npm run admin:create                      -> uses ADMIN_NAME / ADMIN_EMAIL / ADMIN_PASSWORD from .env
 //        npm run admin:create -- email@x.com Secret@123 "Full Name"
 import bcrypt from 'bcryptjs';
-import { connect } from './_db.mjs';
+import { connect, isPublicExamplePassword } from './_db.mjs';
 
 const [argEmail, argPassword, argName] = process.argv.slice(2);
 const email = (argEmail || process.env.ADMIN_EMAIL || '').trim().toLowerCase();
@@ -15,6 +15,10 @@ if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
 }
 if (password.length < 8) {
   console.error('✖ Admin password must be at least 8 characters.');
+  process.exit(1);
+}
+if (isPublicExamplePassword(password)) {
+  console.error('✖ That password was published in this repository. Choose your own.');
   process.exit(1);
 }
 

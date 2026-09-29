@@ -1,4 +1,5 @@
 const isDev = process.env.NODE_ENV !== 'production';
+const isHttps = (process.env.NEXT_PUBLIC_SITE_URL || '').startsWith('https://');
 
 // Content-Security-Policy: only this site, Google Fonts and the Google Maps embed.
 // 'unsafe-inline' scripts are needed by Next.js' inline bootstrapping (no nonces);
@@ -24,7 +25,8 @@ const SECURITY_HEADERS = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=()' },
-  ...(isDev ? [] : [{ key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' }]),
+  // HSTS only makes sense (and is only honoured) when the site is served over HTTPS.
+  ...(isDev || !isHttps ? [] : [{ key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' }]),
 ];
 
 /** @type {import('next').NextConfig} */

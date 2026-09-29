@@ -5,6 +5,7 @@ import { requireAdmin } from '@/lib/auth/session';
 import { fieldErrors } from '@/lib/validation/fields';
 import { inspectImageFields, saveImage, deleteImage } from '@/lib/uploads';
 import { logActivity } from './activity';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 /** Reads plain (non-file) form fields into an object. */
 export function formValues(formData, names) {
@@ -37,7 +38,7 @@ export function refreshSite() {
  *   repo, schema, fields: ['name', ...],
  *   images: [{ field, rules, folder, required }],   // `required` applies when creating
  *   activeLimit: { max, label },                     // optional cap on active rows
- *   listPath: '/bys-panel-d10224a364/...',
+ *   listPath: `${ADMIN_BASE}/...`,
  *   label: 'Job Openings', nameField: 'title',        // for the activity log
  * }
  */

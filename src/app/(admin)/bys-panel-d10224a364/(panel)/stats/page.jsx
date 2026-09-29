@@ -5,6 +5,7 @@ import PageHeader from '@/components/admin/PageHeader';
 import StatusAlert from '@/components/admin/StatusAlert';
 import AdminTable, { ActiveBadge } from '@/components/admin/AdminTable';
 import RowActions from '@/components/admin/RowActions';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 export const metadata = { title: 'Counters' };
 
@@ -16,13 +17,13 @@ export default async function StatsPage() {
         siteHref="/"
         title="Counters"
         description={`Animated figures in the home page "About" section (max ${LIMITS.homeStatsActive} visible).`}
-        actionHref="/bys-panel-d10224a364/stats/new"
+        actionHref={`${ADMIN_BASE}/stats/new`}
         actionLabel="Add counter"
       />
       <StatusAlert />
       <AdminTable
         rows={items}
-        emptyAction={{ href: '/bys-panel-d10224a364/stats/new', label: 'Add counter' }}
+        emptyAction={{ href: `${ADMIN_BASE}/stats/new`, label: 'Add counter' }}
         columns={[
           { key: 'value', label: 'Figure', render: (row) => <strong className="fs-5">{row.value}{row.suffix}</strong> },
           { key: 'label', label: 'Label' },
@@ -31,7 +32,7 @@ export default async function StatsPage() {
           {
             key: 'actions', label: '', className: 'text-end',
             render: (row) => (
-              <RowActions id={row.id} isActive={row.isActive} editHref={`/bys-panel-d10224a364/stats/${row.id}/edit`} toggleAction={toggleHomeStat} deleteAction={deleteHomeStat} itemLabel={`"${row.label}"`} />
+              <RowActions id={row.id} isActive={row.isActive} editHref={`${ADMIN_BASE}/stats/${row.id}/edit`} toggleAction={toggleHomeStat} deleteAction={deleteHomeStat} itemLabel={`"${row.label}"`} />
             ),
           },
         ]}

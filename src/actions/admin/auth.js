@@ -10,6 +10,7 @@ import { loginSchema, changePasswordSchema, profileSchema } from '@/lib/validati
 import { fieldErrors } from '@/lib/validation/fields';
 import { formValues, failure } from '@/lib/admin/crud';
 import { logActivity } from '@/lib/admin/activity';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 // Compared against when the email is unknown, so response times don't reveal which emails exist.
 let dummyHash;
@@ -19,9 +20,9 @@ async function getDummyHash() {
 }
 
 function safeRedirectTarget(value) {
-  return typeof value === 'string' && value.startsWith('/bys-panel-d10224a364') && !value.startsWith('//') && value !== '/bys-panel-d10224a364/login'
+  return typeof value === 'string' && value.startsWith(ADMIN_BASE) && !value.startsWith('//') && value !== `${ADMIN_BASE}/login`
     ? value
-    : '/bys-panel-d10224a364';
+    : ADMIN_BASE;
 }
 
 export async function login(_prevState, formData) {
@@ -51,7 +52,7 @@ export async function login(_prevState, formData) {
 
 export async function logout() {
   await deleteSession();
-  redirect('/bys-panel-d10224a364/login');
+  redirect(`${ADMIN_BASE}/login`);
 }
 
 export async function updateProfile(_prevState, formData) {

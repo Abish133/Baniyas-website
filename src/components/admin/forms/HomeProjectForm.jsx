@@ -6,10 +6,11 @@ import ImageField from '@/components/admin/form/ImageField';
 import PublishingSection from './PublishingSection';
 import { IMAGE_RULES } from '@/lib/validation/image-rules';
 import { saveHomeProject } from '@/actions/admin/home-projects';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 export default function HomeProjectForm({ item, defaults }) {
   return (
-    <AdminForm action={saveHomeProject} recordId={item?.id} initialValues={item || defaults} cancelHref="/bys-panel-d10224a364/home-projects">
+    <AdminForm action={saveHomeProject} recordId={item?.id} initialValues={item || defaults} cancelHref={`${ADMIN_BASE}/home-projects`}>
       <FormLayout aside={<PublishingSection activeHelp="Up to 6 projects can be visible." />}>
         <FormSection title="Project details" description="Hover-to-expand strip on the home page." icon="fa-regular fa-images">
           <div className="row">

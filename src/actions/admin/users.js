@@ -8,8 +8,9 @@ import { adminUserSchema } from '@/lib/validation/schemas';
 import { fieldErrors } from '@/lib/validation/fields';
 import { formValues, parseId, failure } from '@/lib/admin/crud';
 import { logActivity } from '@/lib/admin/activity';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
-const LIST_PATH = '/bys-panel-d10224a364/users';
+const LIST_PATH = `${ADMIN_BASE}/users`;
 
 export async function saveAdminUser(_prevState, formData) {
   const admin = await requireAdmin();

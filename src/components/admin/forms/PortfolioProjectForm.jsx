@@ -6,10 +6,11 @@ import ImageField from '@/components/admin/form/ImageField';
 import PublishingSection from './PublishingSection';
 import { IMAGE_RULES } from '@/lib/validation/image-rules';
 import { savePortfolioProject } from '@/actions/admin/portfolio';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 export default function PortfolioProjectForm({ item, defaults }) {
   return (
-    <AdminForm action={savePortfolioProject} recordId={item?.id} initialValues={item || defaults} cancelHref="/bys-panel-d10224a364/portfolio">
+    <AdminForm action={savePortfolioProject} recordId={item?.id} initialValues={item || defaults} cancelHref={`${ADMIN_BASE}/portfolio`}>
       <FormLayout aside={<PublishingSection />}>
         <FormSection title="Image" description="Project photo in the Portfolio page grid." icon="fa-regular fa-image">
           <ImageField name="image" label="Project image" rules={IMAGE_RULES.portfolioProject} currentUrl={item?.image} required />

@@ -4,10 +4,11 @@ import AdminForm, { FormLayout, FormSection } from '@/components/admin/form/Admi
 import { TextField, TextAreaField } from '@/components/admin/form/fields';
 import PublishingSection from './PublishingSection';
 import { saveJob } from '@/actions/admin/jobs';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 export default function JobForm({ item, defaults }) {
   return (
-    <AdminForm action={saveJob} recordId={item?.id} initialValues={item || defaults} cancelHref="/bys-panel-d10224a364/jobs">
+    <AdminForm action={saveJob} recordId={item?.id} initialValues={item || defaults} cancelHref={`${ADMIN_BASE}/jobs`}>
       <FormLayout aside={<PublishingSection />}>
         <FormSection title="Position" description='Card in "Open Positions" on the Careers page.' icon="fa-regular fa-briefcase">
           <div className="row">

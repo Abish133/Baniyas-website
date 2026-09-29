@@ -3,6 +3,7 @@ import { LIMITS } from '@/lib/validation/schemas';
 import { loadRecord } from '@/lib/admin/params';
 import PageHeader from '@/components/admin/PageHeader';
 import ServiceForm from '@/components/admin/forms/ServiceForm';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 export const metadata = { title: 'Edit service' };
 
@@ -10,7 +11,7 @@ export default async function EditServicePage({ params }) {
   const item = await loadRecord(params, servicesRepo.findById);
   return (
     <>
-      <PageHeader title={`Edit: ${item.title}`} backHref="/bys-panel-d10224a364/services" />
+      <PageHeader title={`Edit: ${item.title}`} backHref={`${ADMIN_BASE}/services`} />
       <ServiceForm item={item} limits={{ benefits: LIMITS.serviceBenefits, faqs: LIMITS.serviceFaqs }} />
     </>
   );

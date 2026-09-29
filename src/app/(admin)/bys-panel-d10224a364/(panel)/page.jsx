@@ -14,6 +14,7 @@ import {
 import { SOCIAL_NETWORKS } from '@/lib/constants/site';
 import { requireAdmin } from '@/lib/auth/session';
 import { initials } from '@/components/admin/nav';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 export const metadata = { title: 'Dashboard' };
 
@@ -74,21 +75,21 @@ export default async function DashboardPage() {
   ];
 
   const cards = [
-    { href: '/bys-panel-d10224a364/services', label: 'Services', icon: 'fa-helmet-safety', tone: 'amber', total: services.length, visible: services.filter((s) => s.isActive).length, note: 'Home slider & services page' },
-    { href: '/bys-panel-d10224a364/portfolio', label: 'Portfolio', icon: 'fa-building', tone: 'blue', ...portfolio, note: 'Portfolio page grid' },
-    { href: '/bys-panel-d10224a364/home-projects', label: 'Project Showcase', icon: 'fa-images', tone: 'violet', ...projects, note: 'Home hover gallery' },
-    { href: '/bys-panel-d10224a364/jobs', label: 'Job Openings', icon: 'fa-briefcase', tone: 'green', ...jobs, note: 'Careers page' },
-    { href: '/bys-panel-d10224a364/trusted-clients', label: 'Trusted Clients', icon: 'fa-handshake', tone: 'teal', ...trusted, note: 'Home logo strip' },
-    { href: '/bys-panel-d10224a364/stats', label: 'Counters', icon: 'fa-chart-simple', tone: 'rose', ...stats, note: 'Home figures' },
-    { href: '/bys-panel-d10224a364/clients', label: 'Our Clients', icon: 'fa-users', tone: 'slate', ...clients, note: 'About page list' },
+    { href: `${ADMIN_BASE}/services`, label: 'Services', icon: 'fa-helmet-safety', tone: 'amber', total: services.length, visible: services.filter((s) => s.isActive).length, note: 'Home slider & services page' },
+    { href: `${ADMIN_BASE}/portfolio`, label: 'Portfolio', icon: 'fa-building', tone: 'blue', ...portfolio, note: 'Portfolio page grid' },
+    { href: `${ADMIN_BASE}/home-projects`, label: 'Project Showcase', icon: 'fa-images', tone: 'violet', ...projects, note: 'Home hover gallery' },
+    { href: `${ADMIN_BASE}/jobs`, label: 'Job Openings', icon: 'fa-briefcase', tone: 'green', ...jobs, note: 'Careers page' },
+    { href: `${ADMIN_BASE}/trusted-clients`, label: 'Trusted Clients', icon: 'fa-handshake', tone: 'teal', ...trusted, note: 'Home logo strip' },
+    { href: `${ADMIN_BASE}/stats`, label: 'Counters', icon: 'fa-chart-simple', tone: 'rose', ...stats, note: 'Home figures' },
+    { href: `${ADMIN_BASE}/clients`, label: 'Our Clients', icon: 'fa-users', tone: 'slate', ...clients, note: 'About page list' },
   ];
 
   const quickActions = [
-    { href: '/bys-panel-d10224a364/services/new', label: 'Add a service', icon: 'fa-helmet-safety' },
-    { href: '/bys-panel-d10224a364/portfolio/new', label: 'Add a portfolio project', icon: 'fa-building' },
-    { href: '/bys-panel-d10224a364/jobs/new', label: 'Post a job opening', icon: 'fa-briefcase' },
-    { href: '/bys-panel-d10224a364/contact', label: 'Update contact details', icon: 'fa-address-book' },
-    { href: '/bys-panel-d10224a364/content/home', label: 'Edit home page text', icon: 'fa-house' },
+    { href: `${ADMIN_BASE}/services/new`, label: 'Add a service', icon: 'fa-helmet-safety' },
+    { href: `${ADMIN_BASE}/portfolio/new`, label: 'Add a portfolio project', icon: 'fa-building' },
+    { href: `${ADMIN_BASE}/jobs/new`, label: 'Post a job opening', icon: 'fa-briefcase' },
+    { href: `${ADMIN_BASE}/contact`, label: 'Update contact details', icon: 'fa-address-book' },
+    { href: `${ADMIN_BASE}/content/home`, label: 'Edit home page text', icon: 'fa-house' },
   ];
 
   const sitePages = [
@@ -116,13 +117,13 @@ export default async function DashboardPage() {
             Manage every dynamic section of the Bani Yas website. Changes are published as soon as you save.
             {unread > 0 && (
               <>
-                {' '}You have <Link href="/bys-panel-d10224a364/messages">{unread} unread message{unread > 1 ? 's' : ''}</Link>.
+                {' '}You have <Link href={`${ADMIN_BASE}/messages`}>{unread} unread message{unread > 1 ? 's' : ''}</Link>.
               </>
             )}
           </p>
         </div>
         <div className="admin-hero__actions">
-          <Link href="/bys-panel-d10224a364/services/new" className="btn btn-primary">
+          <Link href={`${ADMIN_BASE}/services/new`} className="btn btn-primary">
             <i className="fa-solid fa-plus me-2"></i>Add service
           </Link>
           <a href="/" target="_blank" rel="noreferrer" className="btn btn-hero-ghost">
@@ -132,7 +133,7 @@ export default async function DashboardPage() {
       </section>
 
       <div className="admin-stat-grid">
-        <Link href="/bys-panel-d10224a364/messages" className="admin-stat admin-stat--highlight">
+        <Link href={`${ADMIN_BASE}/messages`} className="admin-stat admin-stat--highlight">
           <span className="admin-stat__icon admin-tone--amber">
             <i className="fa-regular fa-envelope"></i>
           </span>
@@ -168,7 +169,7 @@ export default async function DashboardPage() {
                 <h2>Recent messages</h2>
                 <p>Latest submissions from the Contact page.</p>
               </div>
-              <Link href="/bys-panel-d10224a364/messages" className="btn btn-light btn-sm">
+              <Link href={`${ADMIN_BASE}/messages`} className="btn btn-light btn-sm">
                 View all<i className="fa-regular fa-arrow-right ms-2"></i>
               </Link>
             </header>
@@ -183,7 +184,7 @@ export default async function DashboardPage() {
               <ul className="admin-inbox">
                 {recent.map((message) => (
                   <li key={message.id}>
-                    <Link href={`/bys-panel-d10224a364/messages/${message.id}`} className={`admin-inbox__item${message.isRead ? '' : ' is-unread'}`}>
+                    <Link href={`${ADMIN_BASE}/messages/${message.id}`} className={`admin-inbox__item${message.isRead ? '' : ' is-unread'}`}>
                       <span className="admin-avatar">{initials(message.name)}</span>
                       <span className="admin-inbox__body">
                         <span className="admin-inbox__top">
@@ -206,7 +207,7 @@ export default async function DashboardPage() {
                   <h2>Recent changes</h2>
                   <p>Latest edits in this admin panel.</p>
                 </div>
-                <Link href="/bys-panel-d10224a364/activity" className="btn btn-light btn-sm">
+                <Link href={`${ADMIN_BASE}/activity`} className="btn btn-light btn-sm">
                   View all<i className="fa-regular fa-arrow-right ms-2"></i>
                 </Link>
               </header>
@@ -252,7 +253,7 @@ export default async function DashboardPage() {
                 <h2>Contact details</h2>
                 <p>Footer, sidebar menu and Contact page.</p>
               </div>
-              <Link href="/bys-panel-d10224a364/contact" className="btn btn-light btn-sm">
+              <Link href={`${ADMIN_BASE}/contact`} className="btn btn-light btn-sm">
                 <i className="fa-regular fa-pen me-2"></i>Edit
               </Link>
             </header>

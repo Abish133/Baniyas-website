@@ -6,6 +6,7 @@ import StatusAlert from '@/components/admin/StatusAlert';
 import AdminTable from '@/components/admin/AdminTable';
 import RowActions from '@/components/admin/RowActions';
 import { initials } from '@/components/admin/nav';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 export const metadata = { title: 'Messages' };
 
@@ -33,7 +34,7 @@ export default async function MessagesPage({ searchParams }) {
             </button>
           </form>
         )}
-        <a className="btn btn-light" href={`/bys-panel-d10224a364/messages/export${exportQuery ? `?${exportQuery}` : ''}`}>
+        <a className="btn btn-light" href={`${ADMIN_BASE}/messages/export${exportQuery ? `?${exportQuery}` : ''}`}>
           <i className="fa-regular fa-file-arrow-down me-2"></i>Download CSV
         </a>
       </PageHeader>
@@ -49,7 +50,7 @@ export default async function MessagesPage({ searchParams }) {
         </select>
         <button type="submit" className="btn btn-primary">Apply</button>
         {filtered && (
-          <Link href="/bys-panel-d10224a364/messages" className="btn btn-light">
+          <Link href={`${ADMIN_BASE}/messages`} className="btn btn-light">
             Clear
           </Link>
         )}
@@ -62,7 +63,7 @@ export default async function MessagesPage({ searchParams }) {
           {
             key: 'name', label: 'From',
             render: (row) => (
-              <Link href={`/bys-panel-d10224a364/messages/${row.id}`} className={`admin-sender${row.isRead ? '' : ' is-unread'}`}>
+              <Link href={`${ADMIN_BASE}/messages/${row.id}`} className={`admin-sender${row.isRead ? '' : ' is-unread'}`}>
                 <span className="admin-avatar">{initials(row.name)}</span>
                 <span className="min-w-0">
                   <span className="admin-sender__name">
@@ -78,7 +79,7 @@ export default async function MessagesPage({ searchParams }) {
           { key: 'createdAt', label: 'Received', render: (row) => <span className="small text-nowrap">{formatDate(row.createdAt)}</span> },
           {
             key: 'actions', label: '', className: 'text-end',
-            render: (row) => <RowActions id={row.id} editHref={`/bys-panel-d10224a364/messages/${row.id}`} editIcon="fa-regular fa-envelope-open-text" editLabel="Open" deleteAction={deleteMessage} itemLabel={`the message from ${row.name}`} />,
+            render: (row) => <RowActions id={row.id} editHref={`${ADMIN_BASE}/messages/${row.id}`} editIcon="fa-regular fa-envelope-open-text" editLabel="Open" deleteAction={deleteMessage} itemLabel={`the message from ${row.name}`} />,
           },
         ]}
       />

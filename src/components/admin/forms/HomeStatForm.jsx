@@ -4,10 +4,11 @@ import AdminForm, { FormLayout, FormSection } from '@/components/admin/form/Admi
 import { TextField, NumberField } from '@/components/admin/form/fields';
 import PublishingSection from './PublishingSection';
 import { saveHomeStat } from '@/actions/admin/stats';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 export default function HomeStatForm({ item, defaults }) {
   return (
-    <AdminForm action={saveHomeStat} recordId={item?.id} initialValues={item || defaults} cancelHref="/bys-panel-d10224a364/stats">
+    <AdminForm action={saveHomeStat} recordId={item?.id} initialValues={item || defaults} cancelHref={`${ADMIN_BASE}/stats`}>
       <FormLayout aside={<PublishingSection activeHelp="Maximum 3 counters can be visible (3-column layout)." />}>
         <FormSection title="Counter" description='Animated figure in the home page "About" section, e.g. 35+ Complete Projects.' icon="fa-regular fa-chart-simple">
           <div className="row">

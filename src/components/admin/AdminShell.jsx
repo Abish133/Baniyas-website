@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { ADMIN_NAV, breadcrumbFor, initials, isNavItemActive } from './nav';
 import { logout } from '@/actions/admin/auth';
 import { SIDEBAR_COOKIE } from './constants';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 const DESKTOP_QUERY = '(min-width: 992px)';
 
@@ -64,7 +65,7 @@ function Sidebar({ pathname, collapsed, unreadMessages }) {
 
   return (
     <aside className="admin-sidebar" aria-label="Admin navigation">
-      <Link href="/bys-panel-d10224a364" className="admin-sidebar__brand" onMouseEnter={(e) => showTip(e, 'Dashboard')} onMouseLeave={hideTip}>
+      <Link href={ADMIN_BASE} className="admin-sidebar__brand" onMouseEnter={(e) => showTip(e, 'Dashboard')} onMouseLeave={hideTip}>
         <img src="/assets/img/logo.webp" alt="" />
         <span className="admin-sidebar__brand-text">
           Bani Yas
@@ -140,7 +141,7 @@ function Topbar({ pathname, admin, unreadMessages, collapsed, onToggle }) {
       </button>
 
       <nav className="admin-breadcrumb" aria-label="Breadcrumb">
-        <Link href="/bys-panel-d10224a364" className="admin-breadcrumb__home" aria-label="Dashboard">
+        <Link href={ADMIN_BASE} className="admin-breadcrumb__home" aria-label="Dashboard">
           <i className="fa-regular fa-house"></i>
         </Link>
         {trail.map((crumb, index) => (
@@ -155,7 +156,7 @@ function Topbar({ pathname, admin, unreadMessages, collapsed, onToggle }) {
         <a href="/" target="_blank" rel="noreferrer" className="btn btn-light admin-topbar__site d-none d-md-inline-flex">
           <i className="fa-regular fa-arrow-up-right-from-square"></i>View website
         </a>
-        <Link href="/bys-panel-d10224a364/messages" className="admin-icon-btn position-relative" aria-label="Messages" title="Messages">
+        <Link href={`${ADMIN_BASE}/messages`} className="admin-icon-btn position-relative" aria-label="Messages" title="Messages">
           <i className="fa-regular fa-bell"></i>
           {unreadMessages > 0 && <span className="admin-icon-btn__badge">{unreadMessages > 9 ? '9+' : unreadMessages}</span>}
         </Link>
@@ -197,10 +198,10 @@ function UserMenu({ admin }) {
               <div className="small text-muted text-truncate">{admin.email}</div>
             </div>
           </div>
-          <Link href="/bys-panel-d10224a364/account" className="admin-user__item" role="menuitem" onClick={() => setOpen(false)}>
+          <Link href={`${ADMIN_BASE}/account`} className="admin-user__item" role="menuitem" onClick={() => setOpen(false)}>
             <i className="fa-regular fa-user-gear"></i>My account
           </Link>
-          <Link href="/bys-panel-d10224a364/activity" className="admin-user__item" role="menuitem" onClick={() => setOpen(false)}>
+          <Link href={`${ADMIN_BASE}/activity`} className="admin-user__item" role="menuitem" onClick={() => setOpen(false)}>
             <i className="fa-regular fa-clock-rotate-left"></i>Activity log
           </Link>
           <form action={logout}>

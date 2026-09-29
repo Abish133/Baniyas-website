@@ -6,6 +6,7 @@ import StatusAlert from '@/components/admin/StatusAlert';
 import AdminTable from '@/components/admin/AdminTable';
 import RowActions from '@/components/admin/RowActions';
 import { initials } from '@/components/admin/nav';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 export const metadata = { title: 'Admin Users' };
 
@@ -16,7 +17,7 @@ export default async function AdminUsersPage() {
   const [me, admins] = await Promise.all([requireAdmin(), adminUsersRepo.listAdmins()]);
   return (
     <>
-      <PageHeader title="Admin Users" description="People who can sign in to this admin panel." actionHref="/bys-panel-d10224a364/users/new" actionLabel="Add admin" />
+      <PageHeader title="Admin Users" description="People who can sign in to this admin panel." actionHref={`${ADMIN_BASE}/users/new`} actionLabel="Add admin" />
       <StatusAlert />
       <AdminTable
         rows={admins}
@@ -43,7 +44,7 @@ export default async function AdminUsersPage() {
             render: (row) => (
               <RowActions
                 id={row.id}
-                editHref={row.id === me.id ? '/bys-panel-d10224a364/account' : `/bys-panel-d10224a364/users/${row.id}/edit`}
+                editHref={row.id === me.id ? `${ADMIN_BASE}/account` : `${ADMIN_BASE}/users/${row.id}/edit`}
                 deleteAction={row.id === me.id || admins.length <= 1 ? undefined : deleteAdminUser}
                 itemLabel={`the admin account of ${row.name}`}
               />

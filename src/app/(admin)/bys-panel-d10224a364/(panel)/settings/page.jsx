@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 // "Section Headings" moved into the Page content screens.
 export default function SettingsPage() {
-  redirect('/bys-panel-d10224a364/content/home');
+  redirect(`${ADMIN_BASE}/content/home`);
 }

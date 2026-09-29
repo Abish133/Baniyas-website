@@ -7,6 +7,7 @@ import IconPickerField from '@/components/admin/form/IconPickerField';
 import { ListField, FaqField } from '@/components/admin/form/RepeaterFields';
 import { IMAGE_RULES } from '@/lib/validation/image-rules';
 import { saveService } from '@/actions/admin/services';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 function ServiceAside() {
   return (
@@ -27,7 +28,7 @@ function ServiceAside() {
 
 export default function ServiceForm({ item, defaults, limits }) {
   return (
-    <AdminForm action={saveService} recordId={item?.id} initialValues={item || defaults} cancelHref="/bys-panel-d10224a364/services">
+    <AdminForm action={saveService} recordId={item?.id} initialValues={item || defaults} cancelHref={`${ADMIN_BASE}/services`}>
       <FormLayout aside={<ServiceAside />}>
         <FormSection title="Page details" description="Heading and address of the service on the Services page." icon="fa-regular fa-file-lines">
           <div className="row">

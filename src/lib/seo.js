@@ -2,7 +2,7 @@ import 'server-only';
 import { SITE_NAME } from '@/lib/constants/site';
 import { getSiteSettings, getSiteContact } from '@/lib/content';
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(/\/+$/, '');
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:7111').replace(/\/+$/, '');
 
 const PATHS = { home: '/', about: '/about', services: '/services', portfolio: '/portfolio', careers: '/careers', contact: '/contact' };
 

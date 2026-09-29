@@ -30,7 +30,7 @@ export function createLimiter(name, { windowMs, max }) {
     /** True when `key` already used up its allowance. */
     isLimited(key) {
       const entry = store.entries.get(key);
-      return fresh(entry, Date.now()) && entry.count >= max;
+      return Boolean(fresh(entry, Date.now()) && entry.count >= max);
     },
     /** Counts one hit for `key`. */
     hit(key) {
@@ -47,7 +47,7 @@ export function createLimiter(name, { windowMs, max }) {
 }
 
 /**
- * Best-effort client IP. Behind a reverse proxy (nginx, Plesk, cPanel, Vercel…) the proxy
+ * Best-effort client IP. Behind a reverse proxy (e.g. nginx, a load balancer, Cloudflare) the proxy
  * appends the real address as the LAST x-forwarded-for entry; earlier entries can be forged
  * by the client, so they are ignored.
  */

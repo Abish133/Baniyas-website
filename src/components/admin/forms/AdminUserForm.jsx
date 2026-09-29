@@ -3,10 +3,11 @@
 import AdminForm, { FormSection } from '@/components/admin/form/AdminForm';
 import { TextField } from '@/components/admin/form/fields';
 import { saveAdminUser } from '@/actions/admin/users';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 export default function AdminUserForm({ item }) {
   return (
-    <AdminForm action={saveAdminUser} recordId={item?.id} initialValues={item || {}} cancelHref="/bys-panel-d10224a364/users">
+    <AdminForm action={saveAdminUser} recordId={item?.id} initialValues={item || {}} cancelHref={`${ADMIN_BASE}/users`}>
       <div className="row">
         <div className="col-xl-8">
           <FormSection

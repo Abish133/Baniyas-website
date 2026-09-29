@@ -4,6 +4,7 @@ import PageHeader from '@/components/admin/PageHeader';
 import StatusAlert from '@/components/admin/StatusAlert';
 import AdminTable, { ActiveBadge, Thumb } from '@/components/admin/AdminTable';
 import RowActions from '@/components/admin/RowActions';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 export const metadata = { title: 'Services' };
 
@@ -15,13 +16,13 @@ export default async function ServicesAdminPage() {
         siteHref="/services"
         title="Services"
         description="Cards in the home page slider and the full details on the Services page."
-        actionHref="/bys-panel-d10224a364/services/new"
+        actionHref={`${ADMIN_BASE}/services/new`}
         actionLabel="Add service"
       />
       <StatusAlert />
       <AdminTable
         rows={items}
-        emptyAction={{ href: '/bys-panel-d10224a364/services/new', label: 'Add service' }}
+        emptyAction={{ href: `${ADMIN_BASE}/services/new`, label: 'Add service' }}
         columns={[
           {
             key: 'icon', label: 'Card',
@@ -54,7 +55,7 @@ export default async function ServicesAdminPage() {
           {
             key: 'actions', label: '', className: 'text-end',
             render: (row) => (
-              <RowActions id={row.id} isActive={row.isActive} editHref={`/bys-panel-d10224a364/services/${row.id}/edit`} toggleAction={toggleService} deleteAction={deleteService} itemLabel={`"${row.title}" with its benefits and FAQs`} />
+              <RowActions id={row.id} isActive={row.isActive} editHref={`${ADMIN_BASE}/services/${row.id}/edit`} toggleAction={toggleService} deleteAction={deleteService} itemLabel={`"${row.title}" with its benefits and FAQs`} />
             ),
           },
         ]}

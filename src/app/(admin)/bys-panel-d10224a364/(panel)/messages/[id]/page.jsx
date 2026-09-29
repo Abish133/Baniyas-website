@@ -4,6 +4,7 @@ import { toggleMessageRead, deleteMessage } from '@/actions/admin/messages';
 import PageHeader from '@/components/admin/PageHeader';
 import RowActions from '@/components/admin/RowActions';
 import { initials } from '@/components/admin/nav';
+import { ADMIN_BASE } from '@/lib/admin-path';
 
 export const metadata = { title: 'Message' };
 
@@ -18,7 +19,7 @@ export default async function MessagePage({ params }) {
 
   return (
     <>
-      <PageHeader title={`Message from ${message.name}`} description={received} backHref="/bys-panel-d10224a364/messages">
+      <PageHeader title={`Message from ${message.name}`} description={received} backHref={`${ADMIN_BASE}/messages`}>
         <form action={toggleMessageRead}>
           <input type="hidden" name="id" value={message.id} />
           <button className="btn btn-light" type="submit">

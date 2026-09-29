@@ -16,21 +16,25 @@ MySQL-backed admin panel so the dynamic sections can be managed without touching
 ```bash
 cd baniyas-next
 npm install
-cp .env.example .env          # then edit the values (DB + AUTH_SECRET + admin login)
+# settings are in .env.development (npm run dev) and .env.production (build / Docker)
 npm run db:setup              # creates tables and seeds all current website content + first admin
-npm run dev                   # http://localhost:3000   admin: http://localhost:3000/bys-panel-d10224a364
+npm run dev                   # http://localhost:7111   admin: http://localhost:7111/bys-panel-d10224a364
 ```
 
 Production:
 
 ```bash
 npm run build
-npm start                     # or run behind PM2 / systemd / a reverse proxy
+npm start                     # production on your server: Docker, see deploy/DEPLOYMENT.md
 ```
 
 Requirements: Node.js **20.9+**, MySQL 8+ (or MariaDB 10.6+).
 
-## 2. Environment variables (`.env`)
+## 2. Environment variables (`.env.development` / `.env.production`)
+
+Both files are committed in this **private** repository. Next.js and the npm scripts load
+`.env.development` for `npm run dev` and `.env.production` for `npm run build` / `npm start` / Docker.
+Real environment variables (CI, Coolify) and an optional personal `.env.local` (not committed) override them.
 
 | Variable | Description |
 | --- | --- |
@@ -43,6 +47,7 @@ Requirements: Node.js **20.9+**, MySQL 8+ (or MariaDB 10.6+).
 | `UPLOAD_DIR` | Where uploaded images are stored (default `./storage/uploads`, served at `/uploads/...`). |
 | `CONTACT_FORWARD_URL` | Optional. Contact messages are always saved to MySQL; if set they are also POSTed (JSON) to this URL (this is what emails them). |
 | `BACKUP_DIR` | Where `npm run backup` writes (default `./backups`). |
+| `ERROR_WEBHOOK_URL` | Optional. Server errors are POSTed here (Slack/Discord/Google Chat webhook), max once per error per 10 min. |
 
 ## 3. Scripts
 
@@ -54,6 +59,8 @@ Requirements: Node.js **20.9+**, MySQL 8+ (or MariaDB 10.6+).
 | `npm run admin:create -- email@x.com "Password1" "Name"` | Creates an admin or resets its password. |
 | `npm run backup` | Saves the database (`database.sql`) and uploads to `backups/<date-time>/`; keeps the 14 newest (`-- --keep 30` to change). Run it daily from cron / Task Scheduler. |
 | `npm run lint` | ESLint (Next.js core-web-vitals rules). |
+| `npm test` | Unit tests (Vitest, `tests/unit`): validation, content defaults, uploads, CSV, rate limits, admin URL. No database needed. |
+| `npm run test:e2e` | Browser tests (Playwright, `tests/e2e`) on desktop + mobile Chrome. Needs `npm run build` and the database; starts the site on port 3100. First time: `npx playwright install chromium`. |
 
 If your host does not allow Node scripts to create databases, create the database manually and import
 every file in `database/migrations/` in order (e.g. with phpMyAdmin), then run `npm run db:seed`.
@@ -142,6 +149,20 @@ baniyas-next/
     └── styles/admin.css
 ```
 
+## 5. Deployment, CI and monitoring
+
+- **Deployment guide:** [`deploy/DEPLOYMENT.md`](deploy/DEPLOYMENT.md) (server setup, database user, updates,
+  backups, monitoring, go-live checklist), with the `Dockerfile` (the site is served on port 7111, run by Coolify).
+- **Docker deploy (Coolify):** `.github/workflows/deploy.yml` runs after CI passes on a push to `production`:
+  it builds the image, pushes it to GitHub Container Registry and triggers Coolify's deploy webhook,
+  then waits until `/api/health` reports the new version.
+- **CI:** `.github/workflows/ci.yml` runs lint, unit tests, a MySQL-backed build and the browser tests on every
+  push / pull request. `.github/dependabot.yml` proposes package updates weekly.
+- **Health check:** `GET /api/health` → `{"status":"ok"}` (503 if the database is down) for uptime monitors.
+- **Errors:** logged by `src/instrumentation.js`; alerts go to `ERROR_WEBHOOK_URL` when set.
+- **Admin URL:** defined once in `src/lib/admin-path.js` (`ADMIN_BASE`). It must match the folder
+  `src/app/(admin)/bys-panel-d10224a364` and the matcher in `src/proxy.js` (a unit test checks this).
+
 ## 6. Notes
 
 - **Animations** — `src/components/site/effects/` ports the theme's `custom.js`: WOW reveal, GSAP bounce buttons,
@@ -157,7 +178,7 @@ baniyas-next/
     the CSV export and unknown URLs (404).
   - **Static:** `robots.txt`.
   - `next build` **needs the database**, because the public pages are rendered at build time. The cache lives in
-    `.next/cache`, so run the site as one long-running process (PM2 / systemd). Several instances would each have
+    `.next`, so run the site as one long-running container (Docker, see deploy/). Several instances would each have
     their own cache.
 - **Images & video** —
   - Admin uploads are shrunk to max 2000 px (the org chart 3000 px) and recompressed with `sharp` when saved;
@@ -178,10 +199,10 @@ baniyas-next/
 - **Security headers** (CSP, X-Frame-Options, HSTS in production, …) are set in `next.config.mjs`. If you add an
   external script, font or iframe, allow its domain in the CSP there.
 - **Upload size**: `serverActions.bodySizeLimit` and `proxyClientMaxBodySize` are both 40 MB (banner video up to 30 MB).
-  If a reverse proxy sits in front (nginx `client_max_body_size`, Plesk, cPanel), raise its limit to 40 MB too.
+  If you ever put a reverse proxy in front of the app, raise its upload limit to 40 MB too.
 - The admin URL is hidden on purpose: it is not linked from the site or listed in `robots.txt`.
 
 
 
 
-admin : http://localhost:3000/bys-panel-d10224a364
+admin : http://localhost:7111/bys-panel-d10224a364

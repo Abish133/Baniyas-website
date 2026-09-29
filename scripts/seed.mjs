@@ -2,7 +2,7 @@
 // Idempotent: tables that already contain rows are left untouched.
 // Usage: npm run db:seed
 import bcrypt from 'bcryptjs';
-import { connect } from './_db.mjs';
+import { connect, isPublicExamplePassword } from './_db.mjs';
 import * as data from '../database/seed-data.mjs';
 
 async function isEmpty(conn, table) {
@@ -68,7 +68,9 @@ async function main() {
     // First admin
     const email = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
     const password = process.env.ADMIN_PASSWORD || '';
-    if (email && password) {
+    if (isPublicExamplePassword(password)) {
+      console.warn('! ADMIN_PASSWORD is the old published example — no admin created. Set your own password in .env.');
+    } else if (email && password) {
       const [existing] = await conn.query('SELECT id FROM admin_users WHERE email = ?', [email]);
       if (existing.length) {
         console.log(`• admin_users: ${email} already exists, skipped`);
